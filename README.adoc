@@ -1,0 +1,112 @@
+= Hash Count
+
+== Task Specification
+
+Implement a program to read a text file and store all words in a hash table.
+
+. **Main Task (50 points)**
+  * Open a text file and read the text row by row.
+  * Separate words by these characters:
+  ** Space ( )
+  ** Dot (.)
+  ** new line (\n)
+  * Store the values in a hashtable using dynamic linked lists.
+  * Use the sum of character values as value to be hashed. E.g. Cat = (67+97+116) % 23
+  * Words shall be stored in dynamically allocated memory
+  * Select a good spreading hash value
+  * Print out the hash in a readable way. E.g. max 10 words per row.
+  
+. **Task (15 points)**
++
+  * The occurrence of words shall be counted instead of multiple entries in the list. (see example output)
+  * Add additional word separators:
+  ** semicolon (;)
+  ** colon (:)
+  ** comma (,)
+  ** question mark (?)
+  ** tab (\t)
+  
+. **Task (15 points)**
++
+  * The lists shall always retain alphabetic order.
+
+. **Task (15 points)**
++
+  * Give the user a choice to select one bucket to output separately. 
+Print out the entries in the Bucket.
+  * Let the user select one or more buckets and remove all words from the text which do not match to these selected buckets and write it to a new text file.  
+
+  . **Task (15 points)**
++
+  * Let the user select one or more buckets and censor all words from the text which match to these selected buckets and write it to a new text file.  
+  * All word separators shall be copied to the new file in the correct places.
+  
+. **Task (15 points)**
++
+  * Store the hash in a **binary** file
+  * Read and populate the hash from a file and append/count new words into it when the user wants to do this.
+
+  . **Task (15 points)**
++
+  * The program arguments are handled by `getopt(3)`.  
+
+**Remember** that the program will be validated using valgrind and any memory corruption will be treated as an error.  
+  
+== Example Execution[[exec]]
+
+----
+$ ./hash_count text.txt
+Bucket[0]: Wilbur, Gallicos(4), with(3), improbably, triumph, every, death
+Bucket[1]: who(4), acting, gimmicks, solo, delights
+Bucket[2]: horror(5), unpretentious, lot, indescribably
+Bucket[3]: setpieces, its(2), writer, against, Saw, begins, plot, gradually
+Bucket[4]: way(2), Rinaldi, simply
+Bucket[5]: previous(2), penned, to(6), show(2), obviously, properly, Prentiss, Needless, yet(2)
+Bucket[6]: entitled, double, style, essential, element
+Bucket[7]: genuine, soul, own, starts, remain, most(2), now, madness, fear, enormously
+[...]
+Bucket[34]: first(2), by(2), career, beloved, image, still, Alice, authors
+Bucket[35]: House, but(3), is(6), before, shoves, sleazy, saw, handful, they, obvious, into, was
+Bucket[36]: it(2), on, being, thoroughly, brilliant, point, view, place, no, murderous
+
+$ cat text.txt
+Basically the exact same movie as House of Wax Vincent Prices first genuine
+horror hit released the previous year but seriously who cares because The
+Mad Magician offers just as many sheer thrills delightful period setpieces
+joyous 3D effects sublime acting performances and macabre horror gimmicks
+as its predecessor! Never change a winning team is exactly what writer Crane
+Wilbur must have thought when he penned down Prices character Don Gallico
+another tormented soul besieged by fate and out for vengeance against those
+who wronged him. Don Gallico is about to perform his very first own
+illusionist show as Gallico the Great and plans to exhibit the greatest magic
+trick in history entitled The Girl and the Buzz Saw. Gallicos promising
+solo career is abruptly ruined before it even begins when his previous
+employer Ross Ormond appears on stage and shoves a contract under his nose
+stating that all of Gallicos inventions are the rightful property of the
+company. The sleazy and relentless Ormond who by the way also ransacked
+Gallicos once beloved wife takes off with the buzz saw trick and programs
+it in the show of Gallicos rival The Great Rinaldi.
+Inevitably Gallico snaps and sadistically butchers Ormond but also
+being a master of creating disguises recreates his victims image and
+even starts leading a double life. The Mad Magician is an amusing and
+thoroughly unpretentious 50s horror movie in Grand Guignol style with a
+whole lot of improbably plot twists  the landlady turns out a brilliant
+crime novelist?  and a handful of fantastically grotesque grossout moments
+although they obviously remain suggestive for most part . The 3D delights
+near the beginning of the film like a yoyo player and a goofy trick with
+water fountains merely just serve as timefiller and contemporary 50s hype
+but its still fun to watch even now and without the means to properly behold
+them. The Mad Magician is also interesting from a periodical setting point
+of view as the events take place around the time fingerprints were starting
+to get used as evidence material and the character of Alice Prentiss is an
+obvious reference towards famous crime authors of that era. Needless to state
+that Vincent Price remains the absolute most essential element of triumph
+in this film as well as from nearly every other horror movie this legendary
+man ever starred in. Like no other actor could ever accomplish Price
+depicts the tormented protagonist who gradually descends further and further
+into mental madness in such an indescribably mesmerizing way. You pity Don
+Gallico yet at the same time you fear him enormously. You support his vile
+acts of retaliation and yet simultaneously you realize his murderous rampage
+must end in death. Vincent Price simply was a genius actor and in my
+humble opinion the embodiment of the horror genre.
+----
