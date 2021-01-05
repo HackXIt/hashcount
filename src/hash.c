@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:56:35 AM
  * Last edited:
- *   1/5/2021, 8:52:00 PM
+ *   1/5/2021, 9:56:10 PM
  * Auto updated?
  *   Yes
  *
@@ -23,6 +23,8 @@
 #define TABLE_SIZE 50
 #define MODIFIER 3
 
+// This struct is only for readability
+// I find it a bit less confusing to read "node.next" vs "->next"
 struct nodes
 {
     struct BucketItem *next;
@@ -45,7 +47,7 @@ typedef struct Bucket
 unsigned int hash(const char *word)
 {
     int length = strlen(word);
-    unsigned int hash_value = 0;
+    size_t hash_value = 0;
     for (int i = 0; i < length - 1; i++)
     {
         if (i % 2)
@@ -56,29 +58,30 @@ unsigned int hash(const char *word)
         {
             hash_value += word[i] * MODIFIER;
         }
-        hash_value = hash_value % TABLE_SIZE;
     }
+    hash_value = hash_value % TABLE_SIZE;
 #ifdef VERBOSE
-    printf("%u <= %s\n", hash_value, word);
+    printf("%zu <= %s (%zu)\n", hash_value, word, strlen(word));
 #endif
     return hash_value;
 }
 
 bucket_t **init_hashtable()
 {
-    bucket_t **table = malloc(sizeof(bucket_t) * TABLE_SIZE);
-    if (table != NULL)
-    {
-        for (int i = 0; i < TABLE_SIZE; i++)
-        {
-            table[i] = NULL;
-        }
-    }
-    else
+    bucket_t **table = calloc(TABLE_SIZE, sizeof(bucket_t));
+    if (table == NULL)
     {
         fprintf(stderr, "Failed to allocate memory!");
         return NULL;
     }
+    // calloc sets the pointers to NULL by itself. Very handy.
+    // else
+    // {
+    //     for (int i = 0; i < TABLE_SIZE; i++)
+    //     {
+    //         table[i] = NULL;
+    //     }
+    // }
 
     return table;
 }
@@ -96,7 +99,7 @@ item_t *create_bucket(const char *word)
         else
         {
             fprintf(stderr, "Failed to allocate memory for Bucket-Word!\n");
-            free(newBucket);
+            free(newBucket); // Clearing memory on potential failures: Bonus Points?
             return NULL;
         }
         newBucket->node.next = NULL;
@@ -155,7 +158,7 @@ void print_table(bucket_t **table)
     for (int i = 0; i < TABLE_SIZE; i++)
     {
         printf("Bucket[%d]: ", i);
-        if (table[i]->start == NULL)
+        if (table[i] == NULL)
         {
             printf("-EMPTY-\n");
             continue;
@@ -194,13 +197,21 @@ void cleanup(bucket_t **table)
 {
     for (int i = 0; i < TABLE_SIZE; i++)
     {
-        item_t *tmp = table[i]->start;
-        while (table[i]->start != NULL)
+        if (table[i] == NULL)
         {
-            tmp = table[i]->start->node.next;
-            free(table[i]->start->word);
-            free(table[i]->start);
-            table[i]->start = tmp;
+            free(table[i]);
+            continue;
+        }
+        else
+        {
+            item_t *tmp = table[i]->start;
+            while (table[i]->start != NULL)
+            {
+                tmp = table[i]->start->node.next;
+                free(table[i]->start->word);
+                free(table[i]->start);
+                table[i]->start = tmp;
+            }
         }
         free(table[i]);
     }
@@ -232,11 +243,11 @@ int main(int argc, char const *argv[])
         {
             *newLine = 0; // Set newline Character to Nullbyte => \0
         }
-        char *word = strtok(line, " .");
+        char *word = strtok(line, " .;:,?\t");
         while (word != NULL)
         {
             insert_word(hashtable, word);
-            word = strtok(NULL, " ");
+            word = strtok(NULL, " .;:,?\t");
         }
     }
     print_table(hashtable);
