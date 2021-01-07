@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:57:22 AM
  * Last edited:
- *   1/7/2021, 9:05:39 PM
+ *   1/7/2021, 10:15:33 PM
  * Auto updated?
  *   Yes
  *
@@ -13,10 +13,13 @@
  *   supports the hash-table in case of collisions.
 **/
 
+// TODO delete unnecessary common librarie, if they are not used in this file
+
 /*--- COMMON LIBRARIES ---*/
 #define _GNU_SOURCE // for some reason this is necessary to use strlen()
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include <string.h>
 
 /*--- CUSTOM LIBRARIES ---*/
@@ -103,7 +106,7 @@ item_t *search_bucket(const bucket_t *bucket, const char *word)
     item_t *instance = bucket->start;
     while (instance != NULL)
     {
-        if (strcmp(instance->word, word) != 0) // This comparison is more readable than negation.
+        if (strcmp(instance->word, word) == 0) // This comparison is more readable than negation.
         {
             return instance; // Word already exists in BucketList
         }

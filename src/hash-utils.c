@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:56:35 AM
  * Last edited:
- *   1/7/2021, 9:02:36 PM
+ *   1/7/2021, 9:49:46 PM
  * Auto updated?
  *   Yes
  *
@@ -53,7 +53,7 @@ unsigned int hash(const char *word)
 bucket_t **init_hashtable()
 {
     // calloc sets the pointers to NULL by itself. Very handy.
-    bucket_t **table = calloc(TABLE_SIZE, sizeof(bucket_t));
+    bucket_t **table = calloc(TABLE_SIZE, sizeof(bucket_t *));
     if (table == NULL)
     {
         fprintf(stderr, "Failed to allocate memory!");
@@ -73,7 +73,6 @@ bool insert_word(bucket_t **table, const char *word)
             fprintf(stderr, "Cannot insert word in hash-table!\n");
             return false;
         }
-        return true;
     }
     else // hash-collision occured
     {
