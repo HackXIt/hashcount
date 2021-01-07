@@ -1,10 +1,10 @@
-/* HASH.c
+/* HASH UTILS.c
  *   by Nikolaus Rieder
  *
  * Created:
  *   1/5/2021, 11:56:35 AM
  * Last edited:
- *   1/7/2021, 6:53:35 PM
+ *   1/7/2021, 9:02:36 PM
  * Auto updated?
  *   Yes
  *

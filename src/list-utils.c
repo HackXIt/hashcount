@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:57:22 AM
  * Last edited:
- *   1/7/2021, 8:16:45 PM
+ *   1/7/2021, 9:05:39 PM
  * Auto updated?
  *   Yes
  *
@@ -25,45 +25,6 @@
 /*--- MACROS ---*/
 
 /*--- DEFINITIONS ---*/
-struct nodes
-{
-    /*
-    This struct is only for readability
-    I find it a bit less confusing to read "node.next" vs "->next".
-    It also breaks the repeating syntax-pattern, which makes it more recognizable.
-    Otherwise it would read bucket->start->next->prev ... or something like that.
-    */
-    struct BucketItem *next;
-    struct BucketItem *prev;
-};
-typedef struct BucketItem
-{
-    char *word;
-    size_t count;
-    struct nodes node;
-} item_t;
-
-/*
-I need a function which creates a bucket with an initializing word.
-*/
-bucket_t *create_bucket(const char *word)
-{
-    bucket_t *newBucket = malloc(sizeof(bucket_t));
-    if (newBucket == NULL)
-    {
-        fprintf(stderr, "Failed to allocate memory for new Bucket!\n");
-        return NULL;
-    }
-    newBucket->start = create_item(word);
-    if (newBucket->start == NULL)
-    {
-        fprintf(stderr, "Cannot create bucket, because item-creation failed!\n");
-        free(newBucket);
-        return NULL;
-    }
-    newBucket->end = newBucket->start;
-    return newBucket;
-}
 
 /*
 I need a function which creates a new item for the bucket.
@@ -91,6 +52,28 @@ item_t *create_item(const char *word)
 }
 
 /*
+I need a function which creates a bucket with an initializing word.
+*/
+bucket_t *create_bucket(const char *word)
+{
+    bucket_t *newBucket = malloc(sizeof(bucket_t));
+    if (newBucket == NULL)
+    {
+        fprintf(stderr, "Failed to allocate memory for new Bucket!\n");
+        return NULL;
+    }
+    newBucket->start = create_item(word);
+    if (newBucket->start == NULL)
+    {
+        fprintf(stderr, "Cannot create bucket, because item-creation failed!\n");
+        free(newBucket);
+        return NULL;
+    }
+    newBucket->end = newBucket->start;
+    return newBucket;
+}
+
+/*
 This function assumes uniqueness of the new item.
 The user needs to check if the item already exists or not.
 */
@@ -105,9 +88,9 @@ void append_item(bucket_t *bucket, const char *word)
 /*
 I need a function which adds an item to the sorted list.
 */
-void add_item(bucket_t *bucket, const char *word) {
-    
-}
+// void add_item(bucket_t *bucket, const char *word)
+// {
+// }
 
 /*
 I need a search function for the bucket, which returns the instance, 
@@ -171,7 +154,7 @@ void print_bucket(const bucket_t *bucket)
 /*
 I need a function which free's the allocated memory in a bucket.
 */
-void clean_bucket(const bucket_t *bucket)
+void clean_bucket(bucket_t *bucket)
 {
     item_t *instance = NULL;
     while (bucket->start != NULL)
