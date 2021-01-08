@@ -20,7 +20,7 @@ hashcount.o: hashcount.c
 hashcount: hashcount.o hash-utils.o list-utils.o file-utils.o
 	$(CC) $(CFLAGS) $^ -o $(BUILD)$@
 
-temp: hash-utils.o list-utils.o
+temp: hash-utils.o list-utils.o hashcount.o
 	$(CC) $(CFLAGS) $^ -o $(BUILD)$@
 
 clean:

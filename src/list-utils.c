@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:57:22 AM
  * Last edited:
- *   1/7/2021, 10:15:33 PM
+ *   1/8/2021, 1:57:01 AM
  * Auto updated?
  *   Yes
  *
@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <ctype.h>
 
 /*--- CUSTOM LIBRARIES ---*/
 #include "list-utils.h"
@@ -86,14 +87,28 @@ void append_item(bucket_t *bucket, const char *word)
     bucket->end->node.next = newItem;
     newItem->node.prev = bucket->end;
     bucket->end = newItem;
+    sort_bucket(bucket);
 }
 
 /*
-I need a function which adds an item to the sorted list.
+I need a function which adds an item AND keeps the list sorted.
 */
-// void add_item(bucket_t *bucket, const char *word)
+// void add_item_sorted(bucket_t *bucket, const char *word)
 // {
 // }
+
+void swap_items(item_t *itemA, item_t *itemB)
+{
+    item_t temp = {
+        .word = itemA->word,
+        .count = itemA->count
+        // Ignoring nodes, since they won't need to be swapped.
+    };
+    strcpy(itemA->word, itemB->word);
+    itemA->count = itemB->count;
+    strcpy(itemB->word, temp.word);
+    itemB->count = temp.count;
+}
 
 /*
 I need a search function for the bucket, which returns the instance, 
@@ -117,7 +132,25 @@ item_t *search_bucket(const bucket_t *bucket, const char *word)
 
 /*
 I need a function which sorts the list alphabetically.
+What algorithm should I use for this?
 */
+void sort_bucket(bucket_t *bucket)
+{
+    item_t *instance = bucket->start;
+    item_t *next = instance->node.next;
+    // FIXME I have a sense that this algorithm IS BAD sorting.
+    while (next != NULL)
+    {
+        // sort ignoring upper- & lowercase
+        // Uppercase will always be lower than lowercase
+        if (strcmp(str1, str2) > 0) // if str2 is lower than str1
+        {
+            swap_items(instance, next);
+        }
+        instance = next;
+        next = instance->node.next;
+    }
+}
 
 /*
 I need a function which prints the contents of a bucket.

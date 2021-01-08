@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:56:35 AM
  * Last edited:
- *   1/7/2021, 9:49:46 PM
+ *   1/8/2021, 1:52:54 AM
  * Auto updated?
  *   Yes
  *
@@ -23,7 +23,6 @@
 #include "list-utils.h"
 
 /*--- MACROS ---*/
-#define DEBUG
 // #define VERBOSE
 #define TABLE_SIZE 50
 #define MODIFIER 3
@@ -119,42 +118,39 @@ void clean_table(bucket_t **table)
     free(table);
 }
 
-#ifdef DEBUG
-int main(int argc, char const *argv[])
-{
-    if (argc == 1)
-    {
-        fprintf(stderr, "Missing file argument.\n");
-        return EXIT_FAILURE;
-    }
-    FILE *f_ptr = fopen(argv[1], "r");
-    if (f_ptr == NULL)
-    {
-        fprintf(stderr, "Invalid File-Pointer.\n");
-        return EXIT_FAILURE;
-    }
-    char *line = NULL;
-    size_t len = 0; // size_t is for storing bytes = unsigned long
-    ssize_t read;   // signed size_t for including -1 (return value)
-    bucket_t **hashtable = init_hashtable();
-    while ((read = getline(&line, &len, f_ptr)) != -1)
-    {
-        char *newLine = strchr(line, '\n'); // Get pointer to newline Character
-        if (newLine != NULL)
-        {
-            *newLine = 0; // Set newline Character to Nullbyte => \0
-        }
-        char *word = strtok(line, " .;:,?\t");
-        while (word != NULL)
-        {
-            insert_word(hashtable, word);
-            word = strtok(NULL, " .;:,?\t");
-        }
-    }
-    print_table(hashtable);
-    clean_table(hashtable);
-    fclose(f_ptr);
-    return EXIT_SUCCESS;
-}
-
-#endif
+// int main(int argc, char const *argv[])
+// {
+//     if (argc == 1)
+//     {
+//         fprintf(stderr, "Missing file argument.\n");
+//         return EXIT_FAILURE;
+//     }
+//     FILE *f_ptr = fopen(argv[1], "r");
+//     if (f_ptr == NULL)
+//     {
+//         fprintf(stderr, "Invalid File-Pointer.\n");
+//         return EXIT_FAILURE;
+//     }
+//     char *line = NULL;
+//     size_t len = 0; // size_t is for storing bytes = unsigned long
+//     ssize_t read;   // signed size_t for including -1 (return value)
+//     bucket_t **hashtable = init_hashtable();
+//     while ((read = getline(&line, &len, f_ptr)) != -1)
+//     {
+//         char *newLine = strchr(line, '\n'); // Get pointer to newline Character
+//         if (newLine != NULL)
+//         {
+//             *newLine = 0; // Set newline Character to Nullbyte => \0
+//         }
+//         char *word = strtok(line, " .;:,?\t");
+//         while (word != NULL)
+//         {
+//             insert_word(hashtable, word);
+//             word = strtok(NULL, " .;:,?\t");
+//         }
+//     }
+//     print_table(hashtable);
+//     clean_table(hashtable);
+//     fclose(f_ptr);
+//     return EXIT_SUCCESS;
+// }
