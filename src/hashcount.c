@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:58:26 AM
  * Last edited:
- *   1/8/2021, 2:39:22 AM
+ *   1/8/2021, 10:03:19 AM
  * Auto updated?
  *   Yes
  *
@@ -82,9 +82,10 @@ int main(int argc, char *const argv[])
     {
         F_in = fopen(filename_in, "r");
     }
-    char *line = NULL;
-    size_t len = 0; // size_t is for storing bytes = unsigned long
-    ssize_t read;   // signed size_t for including -1 (return value)
+    size_t len = 20; // Initial line-length, line should be reallocated when it is longer
+    // size_t is for storing bytes = unsigned long
+    char *line = (char *)malloc(len * sizeof(char));
+    ssize_t read; // signed size_t for including -1 (return value)
     bucket_t **hashtable = init_hashtable();
     if (hashtable == NULL)
     {
@@ -112,6 +113,7 @@ int main(int argc, char *const argv[])
     clean_table(hashtable);
     free(filename_in);
     free(filename_out);
+    free(line);
     fclose(F_in);
     return EXIT_SUCCESS;
 }

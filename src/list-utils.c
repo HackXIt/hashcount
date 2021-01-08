@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:57:22 AM
  * Last edited:
- *   1/8/2021, 2:29:18 AM
+ *   1/8/2021, 10:32:01 AM
  * Auto updated?
  *   Yes
  *
@@ -134,6 +134,7 @@ item_t *search_bucket(const bucket_t *bucket, const char *word)
 I need a function which sorts the list alphabetically.
 What algorithm should I use for this?
 */
+
 void sort_bucket(bucket_t *bucket)
 {
     // // FIXME This sort shits and stinks!
