@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:58:26 AM
  * Last edited:
- *   1/8/2021, 2:12:34 AM
+ *   1/8/2021, 2:21:56 AM
  * Auto updated?
  *   Yes
  *
@@ -71,7 +71,7 @@ int main(int argc, char *const argv[])
             break;
         }
     }
-    // NOTE at the moment output is not required.
+    // NOTE at the moment output-file is not required NOR implemented.
     FILE *F_in = NULL;
     if (filename_in == NULL)
     {

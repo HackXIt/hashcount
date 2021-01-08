@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:57:22 AM
  * Last edited:
- *   1/8/2021, 2:00:22 AM
+ *   1/8/2021, 2:23:12 AM
  * Auto updated?
  *   Yes
  *
@@ -136,20 +136,24 @@ What algorithm should I use for this?
 */
 void sort_bucket(bucket_t *bucket)
 {
+    // FIXME This sort shits and stinks!
     item_t *instance = bucket->start;
     item_t *next = instance->node.next;
-    // FIXME I have a sense that this algorithm IS BAD sorting.
-    while (next != NULL)
+    while (instance != NULL)
     {
-        // sort ignoring upper- & lowercase
-        // Uppercase will always be lower than lowercase
-        if (strcmp(instance->word, next->word) > 0) // if str2 is lower than str1
+        while (next != NULL)
         {
-            swap_items(instance, next);
+            // sort ignoring upper- & lowercase
+            // Uppercase will always be lower than lowercase
+            if (strcmp(instance->word, next->word) < 0) // if str2 is lower than str1
+            {
+                swap_items(instance, next);
+            }
+            next = next->node.next;
         }
-        instance = next;
-        next = instance->node.next;
+        instance = instance->node.next;
     }
+    return;
 }
 
 /*
