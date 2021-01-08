@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:58:26 AM
  * Last edited:
- *   1/8/2021, 1:54:39 AM
+ *   1/8/2021, 2:12:34 AM
  * Auto updated?
  *   Yes
  *
@@ -16,6 +16,7 @@
 // TODO delete unnecessary common libraries, if they are not used in this file
 
 /*--- COMMON LIBRARIES ---*/
+#define _GNU_SOURCE
 #include <stdlib.h>
 #include <stdio.h>
 // #include <stdbool.h>
@@ -23,16 +24,20 @@
 #include <getopt.h>
 
 /*--- CUSTOM LIBRARIES ---*/
+// FIXME I don't want to import list-utils here
+// But it's throwing unknown type bucket_t, so ???
+#include "list-utils.h"
 #include "hash-utils.h"
 
 /*--- MACROS ---*/
 
 void print_help();
 
-int main(int argc, char const *argv[])
+int main(int argc, char *const argv[])
 {
     char *filename_in = NULL;
     char *filename_out = NULL;
+    char opt;
     while ((opt = getopt(argc, argv, "hf:o:")) != -1)
     {
         switch (opt)
@@ -66,7 +71,8 @@ int main(int argc, char const *argv[])
             break;
         }
     }
-    // As of now output is not required.
+    // NOTE at the moment output is not required.
+    FILE *F_in = NULL;
     if (filename_in == NULL)
     {
         fprintf(stderr, "Please provide an input-filename.\n");
@@ -74,7 +80,7 @@ int main(int argc, char const *argv[])
     }
     else
     {
-        FILE F_in = fopen(filename_in, "r");
+        F_in = fopen(filename_in, "r");
     }
     char *line = NULL;
     size_t len = 0; // size_t is for storing bytes = unsigned long
@@ -83,7 +89,7 @@ int main(int argc, char const *argv[])
     if (hashtable == NULL)
     {
         fprintf(stderr, "Couldn't create hashtable!\n");
-        return EXIT_FAILURE
+        return EXIT_FAILURE;
     }
     while ((read = getline(&line, &len, F_in)) != -1)
     {

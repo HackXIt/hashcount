@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:57:22 AM
  * Last edited:
- *   1/8/2021, 1:57:01 AM
+ *   1/8/2021, 2:00:22 AM
  * Auto updated?
  *   Yes
  *
@@ -143,7 +143,7 @@ void sort_bucket(bucket_t *bucket)
     {
         // sort ignoring upper- & lowercase
         // Uppercase will always be lower than lowercase
-        if (strcmp(str1, str2) > 0) // if str2 is lower than str1
+        if (strcmp(instance->word, next->word) > 0) // if str2 is lower than str1
         {
             swap_items(instance, next);
         }

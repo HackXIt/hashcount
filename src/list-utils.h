@@ -29,5 +29,6 @@ void append_item(bucket_t *bucket, const char *word);
 item_t *search_bucket(const bucket_t *bucket, const char *word);
 void print_bucket(const bucket_t *bucket);
 void clean_bucket(bucket_t *bucket);
+void sort_bucket(bucket_t *bucket);
 
 #endif
