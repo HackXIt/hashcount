@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:58:26 AM
  * Last edited:
- *   1/8/2021, 2:21:56 AM
+ *   1/8/2021, 2:39:22 AM
  * Auto updated?
  *   Yes
  *
@@ -91,6 +91,9 @@ int main(int argc, char *const argv[])
         fprintf(stderr, "Couldn't create hashtable!\n");
         return EXIT_FAILURE;
     }
+    // FIXME the getline function uses pointer-pointer for the buffer ???
+    // and I didn't allocate memory for the buffer, oops
+    // HELP: https://c-for-dummies.com/blog/?p=1112
     while ((read = getline(&line, &len, F_in)) != -1)
     {
         char *newLine = strchr(line, '\n'); // Get pointer to newline Character
@@ -107,6 +110,8 @@ int main(int argc, char *const argv[])
     }
     print_table(hashtable);
     clean_table(hashtable);
+    free(filename_in);
+    free(filename_out);
     fclose(F_in);
     return EXIT_SUCCESS;
 }
