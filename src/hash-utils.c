@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:56:35 AM
  * Last edited:
- *   1/8/2021, 10:31:50 AM
+ *   1/10/2021, 9:07:53 PM
  * Auto updated?
  *   Yes
  *
@@ -24,7 +24,7 @@
 
 /*--- MACROS ---*/
 // #define VERBOSE
-#define TABLE_SIZE 50
+#define TABLE_SIZE 43
 #define MODIFIER 3
 
 unsigned int hash(const char *word)
@@ -69,7 +69,7 @@ bool insert_word(bucket_t **table, const char *word)
         table[index] = create_bucket(word);
         if (table[index] == NULL)
         {
-            fprintf(stderr, "Cannot insert word in hash-table!\n");
+            fprintf(stderr, "Cannot insert word in hash-table because bucket-creation failed!\n");
             return false;
         }
     }
@@ -80,7 +80,7 @@ bool insert_word(bucket_t **table, const char *word)
         if (instance == NULL)
         {
             /* Append new Item */
-            append_item(table[index], word);
+            add_item_sorted(table[index], word);
         }
         else
         {

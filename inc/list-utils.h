@@ -15,6 +15,7 @@ struct nodes
 typedef struct BucketItem
 {
     char *word;
+    char *lower_word;
     size_t count;
     struct nodes node;
 } item_t;
@@ -26,6 +27,7 @@ typedef struct Bucket
 
 bucket_t *create_bucket(const char *word);
 void append_item(bucket_t *bucket, const char *word);
+void add_item_sorted(bucket_t *bucket, const char *word);
 item_t *search_bucket(const bucket_t *bucket, const char *word);
 void print_bucket(const bucket_t *bucket);
 void clean_bucket(bucket_t *bucket);

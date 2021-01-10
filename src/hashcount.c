@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:58:26 AM
  * Last edited:
- *   1/8/2021, 10:03:19 AM
+ *   1/10/2021, 8:12:34 PM
  * Auto updated?
  *   Yes
  *
@@ -82,9 +82,13 @@ int main(int argc, char *const argv[])
     {
         F_in = fopen(filename_in, "r");
     }
-    size_t len = 20; // Initial line-length, line should be reallocated when it is longer
+    size_t len = 1; // Initial line-length, line is reallocated when it is longer
     // size_t is for storing bytes = unsigned long
     char *line = (char *)malloc(len * sizeof(char));
+    if (line == NULL)
+    {
+        fprintf(stderr, "Failed to allocate memory for line in text!\n");
+    }
     ssize_t read; // signed size_t for including -1 (return value)
     bucket_t **hashtable = init_hashtable();
     if (hashtable == NULL)
@@ -92,8 +96,9 @@ int main(int argc, char *const argv[])
         fprintf(stderr, "Couldn't create hashtable!\n");
         return EXIT_FAILURE;
     }
-    // FIXME the getline function uses pointer-pointer for the buffer ???
-    // and I didn't allocate memory for the buffer, oops
+    // NOTE the getline function automatically re-allocates the buffer
+    // This happens when the line is longer than the given length
+    // This re-allocation causes "possible" memory leak if not free'd properly
     // HELP: https://c-for-dummies.com/blog/?p=1112
     while ((read = getline(&line, &len, F_in)) != -1)
     {

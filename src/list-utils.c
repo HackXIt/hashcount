@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:57:22 AM
  * Last edited:
- *   1/8/2021, 10:32:01 AM
+ *   1/10/2021, 9:04:34 PM
  * Auto updated?
  *   Yes
  *
@@ -30,6 +30,16 @@
 
 /*--- DEFINITIONS ---*/
 
+void toLower(char *lower_word, const char *word)
+{
+    size_t length = strlen(word);
+    for (size_t i = 0; i < length; i++)
+    {
+        lower_word[i] = tolower(word[i]);
+    }
+    lower_word[length + 1] = 0; // Terminate with Nullbyte
+}
+
 /*
 I need a function which creates a new item for the bucket.
 */
@@ -42,16 +52,18 @@ item_t *create_item(const char *word)
         return NULL;
     }
     newItem->word = malloc(sizeof(char) * strlen(word) + 1);
+    newItem->lower_word = malloc(sizeof(char) * strlen(word) + 1);
     newItem->count = 1;
     newItem->node.next = NULL;
     newItem->node.prev = NULL;
-    if (newItem->word == NULL)
+    if (newItem->word == NULL || newItem->lower_word == NULL)
     {
         fprintf(stderr, "Failed to allocate memory for Item-Word!\n");
         free(newItem); // Clearing memory on potential failures: Bonus Points?
         return NULL;
     }
     strcpy(newItem->word, word);
+    toLower(newItem->lower_word, word);
     return newItem;
 }
 
@@ -80,6 +92,7 @@ bucket_t *create_bucket(const char *word)
 /*
 This function assumes uniqueness of the new item.
 The user needs to check if the item already exists or not.
+The item is appended to the END of the list, breaking the sorted list.
 */
 void append_item(bucket_t *bucket, const char *word)
 {
@@ -87,27 +100,63 @@ void append_item(bucket_t *bucket, const char *word)
     bucket->end->node.next = newItem;
     newItem->node.prev = bucket->end;
     bucket->end = newItem;
-    sort_bucket(bucket);
 }
 
 /*
 I need a function which adds an item AND keeps the list sorted.
+When using only this function, the list stays sorted from the beginning.
 */
-// void add_item_sorted(bucket_t *bucket, const char *word)
-// {
-// }
-
-void swap_items(item_t *itemA, item_t *itemB)
+void add_item_sorted(bucket_t *bucket, const char *word)
 {
-    item_t temp = {
-        .word = itemA->word,
-        .count = itemA->count
-        // Ignoring nodes, since they won't need to be swapped.
-    };
-    strcpy(itemA->word, itemB->word);
-    itemA->count = itemB->count;
-    strcpy(itemB->word, temp.word);
-    itemB->count = temp.count;
+
+    item_t *newItem = create_item(word);
+    item_t *ref = NULL;
+
+    if (bucket->start == NULL) // First element
+    {
+        bucket->start = newItem;
+    }
+    else if (strcmp(newItem->lower_word, bucket->start->lower_word) < 0) // Insert before starting element
+    {
+        newItem->node.next = bucket->start;
+        newItem->node.next->node.prev = newItem;
+        bucket->start = newItem;
+    }
+    else // Compare with list
+    {
+        ref = bucket->start->node.next; // String is bigger than first word, so start with next node
+        if (ref == NULL)                // Second word in list.
+        {
+            bucket->start->node.next = newItem;
+            newItem->node.prev = bucket->start;
+            return;
+        }
+        while (ref != NULL)
+        {
+            /* Compare if current node is bigger than newItem */
+            if (strcmp(ref->lower_word, newItem->lower_word) > 0)
+            {
+                // Insert before ref if true;
+                newItem->node.prev = ref->node.prev;
+                ref->node.prev->node.next = newItem;
+                ref->node.prev = newItem;
+                newItem->node.next = ref;
+                return;
+            }
+            /* Switch to next next node */
+            if (ref->node.next != NULL)
+            {
+                ref = ref->node.next;
+            }
+            else // Insert after ref when node.next == NULL
+            {
+                ref->node.next = newItem;
+                newItem->node.prev = ref;
+                bucket->end = newItem;
+                return;
+            }
+        }
+    }
 }
 
 /*
@@ -133,29 +182,44 @@ item_t *search_bucket(const bucket_t *bucket, const char *word)
 /*
 I need a function which sorts the list alphabetically.
 What algorithm should I use for this?
+Found one: https://www.geeksforgeeks.org/merge-sort-for-linked-list/
 */
 
-void sort_bucket(bucket_t *bucket)
-{
-    // // FIXME This sort shits and stinks!
-    // item_t *instance = bucket->start;
-    // item_t *next = instance->node.next;
-    // while (instance != NULL)
-    // {
-    //     while (next != NULL)
-    //     {
-    //         // sort ignoring upper- & lowercase
-    //         // Uppercase will always be lower than lowercase
-    //         if (strcmp(instance->word, next->word) < 0) // if str2 is lower than str1
-    //         {
-    //             swap_items(instance, next);
-    //         }
-    //         next = next->node.next;
-    //     }
-    //     instance = instance->node.next;
-    // }
-    return;
-}
+// void swap_items(item_t *itemA, item_t *itemB)
+// {
+//     item_t temp = {
+//         .word = itemA->word,
+//         .count = itemA->count
+//         // Ignoring nodes, since they won't need to be swapped.
+//     };
+//     strcpy(itemA->word, itemB->word);
+//     itemA->count = itemB->count;
+//     strcpy(itemB->word, temp.word);
+//     itemB->count = temp.count;
+// }
+
+// void sort_bucket(bucket_t *bucket)
+// {
+//
+// // FIXME This sort shits and stinks!
+// item_t *instance = bucket->start;
+// item_t *next = instance->node.next;
+// while (instance != NULL)
+// {
+//     while (next != NULL)
+//     {
+//         // sort ignoring upper- & lowercase
+//         // Uppercase will always be lower than lowercase
+//         if (strcmp(instance->word, next->word) < 0) // if str2 is lower than str1
+//         {
+//             swap_items(instance, next);
+//         }
+//         next = next->node.next;
+//     }
+//     instance = instance->node.next;
+// }
+//     return;
+// }
 
 /*
 I need a function which prints the contents of a bucket.
