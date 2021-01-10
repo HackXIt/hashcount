@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:57:22 AM
  * Last edited:
- *   1/10/2021, 9:18:19 PM
+ *   1/10/2021, 9:19:45 PM
  * Auto updated?
  *   Yes
  *
@@ -178,48 +178,6 @@ item_t *search_bucket(const bucket_t *bucket, const char *word)
     }
     return NULL;
 }
-
-/*
-I need a function which sorts the list alphabetically.
-What algorithm should I use for this?
-Found one: https://www.geeksforgeeks.org/merge-sort-for-linked-list/
-*/
-
-// void swap_items(item_t *itemA, item_t *itemB)
-// {
-//     item_t temp = {
-//         .word = itemA->word,
-//         .count = itemA->count
-//         // Ignoring nodes, since they won't need to be swapped.
-//     };
-//     strcpy(itemA->word, itemB->word);
-//     itemA->count = itemB->count;
-//     strcpy(itemB->word, temp.word);
-//     itemB->count = temp.count;
-// }
-
-// void sort_bucket(bucket_t *bucket)
-// {
-//
-// // FIXME This sort shits and stinks!
-// item_t *instance = bucket->start;
-// item_t *next = instance->node.next;
-// while (instance != NULL)
-// {
-//     while (next != NULL)
-//     {
-//         // sort ignoring upper- & lowercase
-//         // Uppercase will always be lower than lowercase
-//         if (strcmp(instance->word, next->word) < 0) // if str2 is lower than str1
-//         {
-//             swap_items(instance, next);
-//         }
-//         next = next->node.next;
-//     }
-//     instance = instance->node.next;
-// }
-//     return;
-// }
 
 /*
 I need a function which prints the contents of a bucket.
