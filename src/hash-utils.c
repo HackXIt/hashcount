@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:56:35 AM
  * Last edited:
- *   1/10/2021, 9:07:53 PM
+ *   1/10/2021, 9:13:22 PM
  * Auto updated?
  *   Yes
  *
@@ -79,8 +79,10 @@ bool insert_word(bucket_t **table, const char *word)
         item_t *instance = search_bucket(table[index], word);
         if (instance == NULL)
         {
-            /* Append new Item */
+            /* Add new Item */
             add_item_sorted(table[index], word);
+            /* To work with unsorted list (faster but unsorted) */
+            // append_item(table[index], word);
         }
         else
         {
@@ -117,40 +119,3 @@ void clean_table(bucket_t **table)
     }
     free(table);
 }
-
-// int main(int argc, char const *argv[])
-// {
-//     if (argc == 1)
-//     {
-//         fprintf(stderr, "Missing file argument.\n");
-//         return EXIT_FAILURE;
-//     }
-//     FILE *f_ptr = fopen(argv[1], "r");
-//     if (f_ptr == NULL)
-//     {
-//         fprintf(stderr, "Invalid File-Pointer.\n");
-//         return EXIT_FAILURE;
-//     }
-//     char *line = NULL;
-//     size_t len = 0; // size_t is for storing bytes = unsigned long
-//     ssize_t read;   // signed size_t for including -1 (return value)
-//     bucket_t **hashtable = init_hashtable();
-//     while ((read = getline(&line, &len, f_ptr)) != -1)
-//     {
-//         char *newLine = strchr(line, '\n'); // Get pointer to newline Character
-//         if (newLine != NULL)
-//         {
-//             *newLine = 0; // Set newline Character to Nullbyte => \0
-//         }
-//         char *word = strtok(line, " .;:,?\t");
-//         while (word != NULL)
-//         {
-//             insert_word(hashtable, word);
-//             word = strtok(NULL, " .;:,?\t");
-//         }
-//     }
-//     print_table(hashtable);
-//     clean_table(hashtable);
-//     fclose(f_ptr);
-//     return EXIT_SUCCESS;
-// }
