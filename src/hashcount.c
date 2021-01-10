@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:58:26 AM
  * Last edited:
- *   1/10/2021, 8:12:34 PM
+ *   1/10/2021, 9:15:30 PM
  * Auto updated?
  *   Yes
  *
@@ -24,8 +24,10 @@
 #include <getopt.h>
 
 /*--- CUSTOM LIBRARIES ---*/
-// FIXME I don't want to import list-utils here
+// FIXME I didn't want to import list-utils here
 // But it's throwing unknown type bucket_t, so ???
+// I assumed that the #include would work recursively,
+// since hash-utils depends on list-utils.
 #include "list-utils.h"
 #include "hash-utils.h"
 
