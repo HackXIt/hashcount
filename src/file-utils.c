@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:51:22 AM
  * Last edited:
- *   1/5/2021, 12:17:46 PM
+ *   1/10/2021, 10:06:36 PM
  * Auto updated?
  *   Yes
  *
@@ -12,8 +12,7 @@
  *   This file contains all file-utility functions
 **/
 
-#ifdef DEBUG
-int main()
-{
-}
-#endif
+/*
+I need a function which reads a line from the FILE-Stream,
+and inserts it into the hashtable.
+*/

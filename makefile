@@ -9,6 +9,9 @@ vpath %.h ./inc
 
 all: hashcount
 
+$(BUILD)hashcount.o: hashcount.c
+	$(CC) $(CFLAGS) $(INC) -c $< -o $@
+
 $(BUILD)%.o: %.c %.h
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
@@ -24,8 +27,7 @@ $(BUILD)%.o: %.c %.h
 # hashcount.o: hashcount.c
 # 	$(CC) $(CFLAGS) -c $< -o $(BUILD)$@
 
-hashcount: hashcount.o hash-utils.o list-utils.o file-utils.o
-	$(CC) $(CFLAGS) $^ -o $@
+# hashcount: hashcount.o hash-utils.o list-utils.
 
 # I know I shouldn't use something else with $@
 # But this shit just doesn't work without it, so yea...

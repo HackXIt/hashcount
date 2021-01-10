@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:56:35 AM
  * Last edited:
- *   1/10/2021, 9:13:22 PM
+ *   1/10/2021, 11:17:09 PM
  * Auto updated?
  *   Yes
  *
@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <ctype.h>
 
 /*--- CUSTOM LIBRARIES ---*/
 #include "list-utils.h"
@@ -26,6 +27,8 @@
 // #define VERBOSE
 #define TABLE_SIZE 43
 #define MODIFIER 3
+#define _STRINGIFY(s) #s
+#define STRINGIFY(s) _STRINGIFY(s)
 
 unsigned int hash(const char *word)
 {
@@ -98,6 +101,70 @@ void print_table(bucket_t **table)
     {
         printf("Bucket[%d]: ", i);
         print_bucket(table[i]);
+        printf("\n");
+    }
+}
+
+void select_bucket_to_print(bucket_t **table)
+{
+    unsigned int selection = TABLE_SIZE + 1;
+    while (selection <= TABLE_SIZE && selection > 0)
+    {
+        printf("Select bucket-number between 1 and " STRINGIFY(TABLE_SIZE) " to output: ");
+        scanf("%u", &selection);
+    }
+    printf("Bucket[%u]: ", selection);
+    print_bucket(table[selection - 1]);
+    printf("\n");
+}
+
+void bucket_selection(bucket_t **table)
+{
+    size_t *selected_buckets = malloc(sizeof(size_t));
+    if (selected_buckets == NULL)
+    {
+        fprintf(stderr, "Failed to allocate memory for bucket-selection!\n");
+    }
+    char selection[2];
+    int bucket_num = 0;
+    size_t counter = 0;
+    while (selection[0] != 'c' && selection[1] != 'c')
+    {
+        printf("\nSelect bucket (1-" STRINGIFY(TABLE_SIZE) ") or continue (c): ");
+        selection[0] = getc(stdin);
+        selection[1] = getc(stdin);
+        if (isdigit(selection[0]) && isdigit(selection[1]))
+        {
+            bucket_num = atoi(&selection[0]) + atoi(&selection[1]);
+        }
+        else if (isdigit(selection[0]))
+        {
+            bucket_num = atoi(&selection[0]);
+        }
+        else if (isdigit(selection[1]))
+        {
+            bucket_num = atoi(&selection[1]);
+        }
+        if (bucket_num > 0 && bucket_num <= TABLE_SIZE)
+        {
+            printf("Bucket[%u]: ", bucket_num);
+            print_bucket(table[bucket_num - 1]);
+            printf("\n");
+            selected_buckets[counter] = bucket_num;
+            bucket_num = 0;
+            counter++;
+            selected_buckets = realloc(selected_buckets, counter + 1);
+            if (selected_buckets == NULL)
+            {
+                fprintf(stderr, "Failed to allocate memory for bucket-selection!\n");
+            }
+        }
+    }
+    printf("--- Your selected buckets ---\n");
+    for (size_t i = 0; i < counter; i++)
+    {
+        printf("Bucket[%zu]: ", i);
+        print_bucket(table[selected_buckets[i]]);
         printf("\n");
     }
 }

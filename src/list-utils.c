@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:57:22 AM
  * Last edited:
- *   1/10/2021, 9:19:45 PM
+ *   1/10/2021, 9:20:50 PM
  * Auto updated?
  *   Yes
  *
@@ -13,7 +13,7 @@
  *   supports the hash-table in case of collisions.
 **/
 
-// TODO delete unnecessary common librarie, if they are not used in this file
+// TODO delete unnecessary common libraries, if they are not used in this file
 
 /*--- COMMON LIBRARIES ---*/
 #define _GNU_SOURCE // for some reason this is necessary to use strlen()
