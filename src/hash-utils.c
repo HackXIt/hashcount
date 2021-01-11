@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:56:35 AM
  * Last edited:
- *   1/10/2021, 11:17:09 PM
+ *   1/11/2021, 1:01:36 AM
  * Auto updated?
  *   Yes
  *
@@ -108,10 +108,13 @@ void print_table(bucket_t **table)
 void select_bucket_to_print(bucket_t **table)
 {
     unsigned int selection = TABLE_SIZE + 1;
-    while (selection <= TABLE_SIZE && selection > 0)
+    char ch; // temp variable to flush stdin after scanf
+    while (selection > TABLE_SIZE || selection < 1)
     {
         printf("Select bucket-number between 1 and " STRINGIFY(TABLE_SIZE) " to output: ");
         scanf("%u", &selection);
+        while ((ch = getchar()) != '\n' && ch != EOF)
+            ;
     }
     printf("Bucket[%u]: ", selection);
     print_bucket(table[selection - 1]);
@@ -120,53 +123,70 @@ void select_bucket_to_print(bucket_t **table)
 
 void bucket_selection(bucket_t **table)
 {
-    size_t *selected_buckets = malloc(sizeof(size_t));
-    if (selected_buckets == NULL)
-    {
-        fprintf(stderr, "Failed to allocate memory for bucket-selection!\n");
-    }
-    char selection[2];
+    bool selected_buckets[TABLE_SIZE] = {0};
+    // if (selected_buckets == NULL)
+    // {
+    //     fprintf(stderr, "Failed to allocate memory for bucket-selection!\n");
+    // }
+    char selection[BUFSIZ];
+    char *endptr;
     int bucket_num = 0;
-    size_t counter = 0;
-    while (selection[0] != 'c' && selection[1] != 'c')
+    // size_t counter = 0;
+    while (selection[0] != 'c')
     {
-        printf("\nSelect bucket (1-" STRINGIFY(TABLE_SIZE) ") or continue (c): ");
-        selection[0] = getc(stdin);
-        selection[1] = getc(stdin);
-        if (isdigit(selection[0]) && isdigit(selection[1]))
+        printf("\nSelect bucket (1-" STRINGIFY(TABLE_SIZE) ") or exit (c): ");
+        if (fgets(selection, sizeof(selection), stdin) != NULL)
         {
-            bucket_num = atoi(&selection[0]) + atoi(&selection[1]);
-        }
-        else if (isdigit(selection[0]))
-        {
-            bucket_num = atoi(&selection[0]);
-        }
-        else if (isdigit(selection[1]))
-        {
-            bucket_num = atoi(&selection[1]);
-        }
-        if (bucket_num > 0 && bucket_num <= TABLE_SIZE)
-        {
-            printf("Bucket[%u]: ", bucket_num);
-            print_bucket(table[bucket_num - 1]);
-            printf("\n");
-            selected_buckets[counter] = bucket_num;
-            bucket_num = 0;
-            counter++;
-            selected_buckets = realloc(selected_buckets, counter + 1);
-            if (selected_buckets == NULL)
+            bucket_num = (int)strtol(selection, &endptr, 10);
+            if (selection[0] != '\n' && (*endptr == '\n' || *endptr == '\0'))
             {
-                fprintf(stderr, "Failed to allocate memory for bucket-selection!\n");
+                if (bucket_num > 0 && bucket_num <= TABLE_SIZE)
+                {
+                    printf("Bucket[%u]: ", bucket_num);
+                    print_bucket(table[(bucket_num - 1)]);
+                    printf("\n");
+                    selected_buckets[(bucket_num - 1)] = true;
+                    // selected_buckets[counter] = (int)bucket_num;
+                    // bucket_num = 0;
+                    // counter++;
+                    // bool *newPointer = (bool *)realloc(selected_buckets, (counter + 1) * sizeof(bool));
+                    // if (newPointer != NULL)
+                    // {
+                    //     selected_buckets = newPointer;
+                    // }
+                    // else
+                    // {
+                    //     fprintf(stderr, "Failed to allocate memory for bucket-selection!\n");
+                    // }
+                }
             }
         }
+        // selection[0] = getc(stdin);
+        // selection[1] = getc(stdin);
+        // if (isdigit(selection[0]) && isdigit(selection[1]))
+        // {
+        //     bucket_num = (atoi(&selection[0]) * 10) + atoi(&selection[1]);
+        // }
+        // else if (isdigit(selection[0]))
+        // {
+        //     bucket_num = atoi(&selection[0]);
+        // }
+        // else if (isdigit(selection[1]))
+        // {
+        //     bucket_num = atoi(&selection[1]);
+        // }
     }
     printf("--- Your selected buckets ---\n");
-    for (size_t i = 0; i < counter; i++)
+    for (int i = 0; i < TABLE_SIZE; i++)
     {
-        printf("Bucket[%zu]: ", i);
-        print_bucket(table[selected_buckets[i]]);
-        printf("\n");
+        if (selected_buckets[i] == true)
+        {
+            printf("Bucket[%u]: ", (i + 1));
+            print_bucket(table[i]);
+            printf("\n");
+        }
     }
+    // free(selected_buckets);
 }
 
 void clean_table(bucket_t **table)
