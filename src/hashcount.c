@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:58:26 AM
  * Last edited:
- *   1/11/2021, 12:49:09 AM
+ *   1/11/2021, 1:17:56 AM
  * Auto updated?
  *   Yes
  *
@@ -116,8 +116,8 @@ int main(int argc, char *const argv[])
             word = strtok(NULL, " .;:,?\t");
         }
     }
-    print_table(hashtable);
-    select_bucket_to_print(hashtable);
+    // print_table(hashtable);
+    // select_bucket_to_print(hashtable);
     bucket_selection(hashtable);
     clean_table(hashtable);
     free(filename_in);
