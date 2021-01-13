@@ -4,7 +4,7 @@
 
 Implement a program to read a text file and store all words in a hash table.
 
-. **Main Task (50 points)**
+. **Main Task (50 points)** (Done)
   * Open a text file and read the text row by row.
   * Separate words by these characters:
   ** Space ( )
@@ -16,7 +16,7 @@ Implement a program to read a text file and store all words in a hash table.
   * Select a good spreading hash value
   * Print out the hash in a readable way. E.g. max 10 words per row.
   
-. **Task (15 points)**
+. **Task (15 points)** (Done)
 +
   * The occurrence of words shall be counted instead of multiple entries in the list. (see example output)
   * Add additional word separators:
@@ -26,7 +26,7 @@ Implement a program to read a text file and store all words in a hash table.
   ** question mark (?)
   ** tab (\t)
   
-. **Task (15 points)**
+. **Task (15 points)** (Done)
 +
   * The lists shall always retain alphabetic order.
 
@@ -46,7 +46,7 @@ Print out the entries in the Bucket.
   * Store the hash in a **binary** file
   * Read and populate the hash from a file and append/count new words into it when the user wants to do this.
 
-  . **Task (15 points)**
+  . **Task (15 points)** (Done)
 +
   * The program arguments are handled by `getopt(3)`.  
 
