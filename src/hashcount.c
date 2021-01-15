@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:58:26 AM
  * Last edited:
- *   1/11/2021, 1:17:56 AM
+ *   1/15/2021, 1:26:32 PM
  * Auto updated?
  *   Yes
  *
@@ -28,7 +28,7 @@
 // But it's throwing unknown type bucket_t, so ???
 // I assumed that the #include would work recursively,
 // since hash-utils depends on list-utils.
-#include "list-utils.h"
+// #include "list-utils.h"
 #include "hash-utils.h"
 
 /*--- MACROS ---*/
@@ -92,7 +92,7 @@ int main(int argc, char *const argv[])
         fprintf(stderr, "Failed to allocate memory for line in text!\n");
     }
     ssize_t read; // signed size_t for including -1 (return value)
-    bucket_t **hashtable = init_hashtable();
+    table_t *hashtable = init_hashtable();
     if (hashtable == NULL)
     {
         fprintf(stderr, "Couldn't create hashtable!\n");

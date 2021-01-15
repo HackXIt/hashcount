@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:56:35 AM
  * Last edited:
- *   1/11/2021, 1:03:03 AM
+ *   1/15/2021, 1:24:36 PM
  * Auto updated?
  *   Yes
  *
@@ -22,6 +22,7 @@
 
 /*--- CUSTOM LIBRARIES ---*/
 #include "list-utils.h"
+#include "hash-utils.h"
 
 /*--- MACROS ---*/
 // #define VERBOSE
@@ -52,25 +53,32 @@ unsigned int hash(const char *word)
     return hash_value;
 }
 
-bucket_t **init_hashtable()
+table_t *init_hashtable()
 {
     // calloc sets the pointers to NULL by itself. Very handy.
-    bucket_t **table = calloc(TABLE_SIZE, sizeof(bucket_t *));
+    table_t *table = malloc(sizeof(table_t *));
     if (table == NULL)
     {
-        fprintf(stderr, "Failed to allocate memory!");
+        fprintf(stderr, "Failed to allocate memory for hashtable!\n");
+        return NULL;
+    }
+    table->arr = calloc(TABLE_SIZE, sizeof(bucket_t *));
+    if (table->arr == NULL)
+    {
+        fprintf(stderr, "Failed to allocate memory for Table-Buckets!\n");
+        free(table);
         return NULL;
     }
     return table;
 }
 
-bool insert_word(bucket_t **table, const char *word)
+unsigned int insert_word(table_t *table, const char *word)
 {
     unsigned int index = hash(word);
-    if (table[index] == NULL) // first word with this hash
+    if (table->arr[index] == NULL) // first word with this hash
     {
-        table[index] = create_bucket(word);
-        if (table[index] == NULL)
+        table->arr[index] = create_bucket(word);
+        if (table->arr[index] == NULL)
         {
             fprintf(stderr, "Cannot insert word in hash-table because bucket-creation failed!\n");
             return false;
@@ -79,11 +87,11 @@ bool insert_word(bucket_t **table, const char *word)
     else // hash-collision occured
     {
         /* Check Bucket if word already exists*/
-        item_t *instance = search_bucket(table[index], word);
+        item_t *instance = search_bucket(table->arr[index], word);
         if (instance == NULL)
         {
             /* Add new Item */
-            add_item_sorted(table[index], word);
+            add_item_sorted(table->arr[index], word);
             /* To work with unsorted list (faster but unsorted) */
             // append_item(table[index], word);
         }
@@ -95,17 +103,17 @@ bool insert_word(bucket_t **table, const char *word)
     return true;
 }
 
-void print_table(bucket_t **table)
+void print_table(table_t *table)
 {
     for (int i = 0; i < TABLE_SIZE; i++)
     {
         printf("Bucket[%d]: ", i);
-        print_bucket(table[i]);
+        print_bucket(table->arr[i]);
         printf("\n");
     }
 }
 
-void select_bucket_to_print(bucket_t **table)
+void select_bucket_to_print(table_t *table)
 {
     unsigned int selection = TABLE_SIZE + 1;
     char ch; // temp variable to flush stdin after scanf
@@ -117,11 +125,11 @@ void select_bucket_to_print(bucket_t **table)
             ;
     }
     printf("Bucket[%u]: ", selection);
-    print_bucket(table[selection - 1]);
+    print_bucket(table->arr[selection - 1]);
     printf("\n");
 }
 
-void bucket_selection(bucket_t **table)
+void bucket_selection(table_t *table)
 {
     bool selected_buckets[TABLE_SIZE] = {0};
     char selection[BUFSIZ];
@@ -138,7 +146,7 @@ void bucket_selection(bucket_t **table)
                 if (bucket_num > 0 && bucket_num <= TABLE_SIZE)
                 {
                     printf("Bucket[%u]: ", bucket_num);
-                    print_bucket(table[(bucket_num - 1)]);
+                    print_bucket(table->arr[(bucket_num - 1)]);
                     printf("\n");
                     selected_buckets[(bucket_num - 1)] = true;
                 }
@@ -151,26 +159,27 @@ void bucket_selection(bucket_t **table)
         if (selected_buckets[i] == true)
         {
             printf("Bucket[%u]: ", (i + 1));
-            print_bucket(table[i]);
+            print_bucket(table->arr[i]);
             printf("\n");
         }
     }
 }
 
-void clean_table(bucket_t **table)
+void clean_table(table_t *table)
 {
     for (int i = 0; i < TABLE_SIZE; i++)
     {
-        if (table[i] == NULL)
+        if (table->arr[i] == NULL)
         {
-            free(table[i]);
+            free(table->arr[i]);
             continue;
         }
         else
         {
-            clean_bucket(table[i]);
+            clean_bucket(table->arr[i]);
         }
-        free(table[i]);
+        free(table->arr[i]);
     }
+    free(table->arr);
     free(table);
 }
