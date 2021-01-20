@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:57:22 AM
  * Last edited:
- *   1/16/2021, 7:51:09 PM
+ *   1/20/2021, 10:02:19 PM
  * Auto updated?
  *   Yes
  *
@@ -27,8 +27,6 @@
 #include "list-utils.h"
 
 /*--- MACROS ---*/
-
-/*--- DEFINITIONS ---*/
 
 void toLower(char *lower_word, const char *word)
 {

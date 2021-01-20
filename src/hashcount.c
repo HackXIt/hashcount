@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:58:26 AM
  * Last edited:
- *   1/19/2021, 6:50:03 PM
+ *   1/20/2021, 10:27:47 PM
  * Auto updated?
  *   Yes
  *
@@ -24,11 +24,6 @@
 #include <getopt.h>
 
 /*--- CUSTOM LIBRARIES ---*/
-// FIXME I didn't want to import list-utils here
-// But it's throwing unknown type bucket_t, so ???
-// I assumed that the #include would work recursively,
-// since hash-utils depends on list-utils.
-// #include "list-utils.h"
 #include "hash-utils.h"
 
 /*--- MACROS ---*/
@@ -73,57 +68,25 @@ int main(int argc, char *const argv[])
             break;
         }
     }
-    // NOTE at the moment output-file is not required NOR implemented.
-    FILE *F_in = NULL;
     if (filename_in == NULL)
     {
-        fprintf(stderr, "Please provide an input-filename.\n");
+        fprintf(stderr, "This program requires an input-file to parse!\n");
         return EXIT_FAILURE;
     }
-    else
-    {
-        F_in = fopen(filename_in, "r");
-    }
-    size_t len = 1; // Initial line-length, line is reallocated when it is longer
-    // size_t is for storing bytes = unsigned long
-    char *line = (char *)malloc(len * sizeof(char));
-    if (line == NULL)
-    {
-        fprintf(stderr, "Failed to allocate memory for line in text!\n");
-    }
-    ssize_t read; // signed size_t for including -1 (return value)
-    table_t *hashtable = init_hashtable();
-    if (hashtable == NULL)
-    {
-        fprintf(stderr, "Couldn't create hashtable!\n");
-        return EXIT_FAILURE;
-    }
-    // NOTE the getline function automatically re-allocates the buffer
-    // This happens when the line is longer than the given length
-    // This re-allocation causes "possible" memory leak if not free'd properly
-    // HELP: https://c-for-dummies.com/blog/?p=1112
-    while ((read = getline(&line, &len, F_in)) != -1)
-    {
-        char *newLine = strchr(line, '\n'); // Get pointer to newline Character
-        if (newLine != NULL)
-        {
-            *newLine = 0; // Set newline Character to Nullbyte => \0
-        }
-        char *word = strtok(line, " .;:,?\t");
-        while (word != NULL)
-        {
-            insert_word(hashtable, word);
-            word = strtok(NULL, " .;:,?\t");
-        }
-    }
+    // NOTE at the moment output-file is not required NOR implemented.
+    table_t hashtable = init_hashtable_from_file(filename_in);
     print_table(hashtable);
     select_bucket_to_print(hashtable);
     bucket_selection(hashtable);
     clean_table(hashtable);
-    free(filename_in);
-    free(filename_out);
-    free(line);
-    fclose(F_in);
+    if (filename_in != NULL)
+    {
+        free(filename_in);
+    }
+    if (filename_out != NULL)
+    {
+        free(filename_out);
+    }
     return EXIT_SUCCESS;
 }
 

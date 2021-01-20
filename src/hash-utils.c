@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:56:35 AM
  * Last edited:
- *   1/19/2021, 7:05:37 PM
+ *   1/20/2021, 10:19:59 PM
  * Auto updated?
  *   Yes
  *
@@ -22,6 +22,7 @@
 
 /*--- CUSTOM LIBRARIES ---*/
 #include "list-utils.h"
+#include "file-utils.h"
 #include "hash-utils.h"
 
 /*--- MACROS ---*/
@@ -68,9 +69,45 @@ table_t init_hashtable()
     if (table == NULL)
     {
         fprintf(stderr, "Failed to allocate memory for Table-Buckets!\n");
+        return NULL;
+    }
+    return table;
+}
+
+table_t init_hashtable_from_file(char const *filename)
+{
+    table_t table = init_hashtable();
+    FILE *f_input = open_file(filename, "r");
+    size_t len = 1; // Initial line-length, line is reallocated when it is longer
+    // size_t is for storing bytes = unsigned long
+    char *line = (char *)malloc(len * sizeof(char));
+    ssize_t read; // signed size_t for including -1 (return value)
+    if (line == NULL)
+    {
+        fprintf(stderr, "Failed to allocate memory for line-buffer!\n");
         free(table);
         return NULL;
     }
+    // NOTE the getline function automatically re-allocates the buffer
+    // This happens when the line is longer than the given length
+    // This re-allocation causes "possible" memory leak if not free'd properly
+    // HELP: https://c-for-dummies.com/blog/?p=1112
+    while ((read = getline(&line, &len, f_input)) != -1)
+    {
+        char *newLine = strchr(line, '\n'); // Get pointer to newline Character
+        if (newLine != NULL)
+        {
+            *newLine = 0; // Set newline Character to Nullbyte => \0
+        }
+        char *word = strtok(line, " .;:,?\t");
+        while (word != NULL)
+        {
+            insert_word(table, word);
+            word = strtok(NULL, " .;:,?\t");
+        }
+    }
+    free(line);
+    close_file(f_input);
     return table;
 }
 
@@ -134,7 +171,7 @@ void select_bucket_to_print(table_t table)
 void bucket_selection(table_t table)
 {
     bool selected_buckets[TABLE_SIZE] = {0};
-    char selection[BUFSIZ];
+    char selection[BUFSIZ]; // FIXME valgrind "Conditional jump or move depends on uninitialised value(s)"
     char *endptr;
     int bucket_num = 0;
     while (selection[0] != 'c')

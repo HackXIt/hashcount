@@ -50,7 +50,7 @@ $(BUILD)%.o: %.c %.h
 
 # I know I shouldn't use something else with $@
 # But this shit just doesn't work without it, so yea...
-temp: $(BUILD)hash-utils.o $(BUILD)list-utils.o $(BUILD)hashcount.o
+temp: $(BUILD)hash-utils.o $(BUILD)list-utils.o $(BUILD)file-utils.o $(BUILD)hashcount.o
 	$(CC) $(CFLAGS) $^ -o $(BUILD)$@
 
 clean:
