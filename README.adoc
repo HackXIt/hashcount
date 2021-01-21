@@ -36,7 +36,7 @@ Implement a program to read a text file and store all words in a hash table.
 Print out the entries in the Bucket.
   * Let the user select one or more buckets and remove all words from the text which do not match to these selected buckets and write it to a new text file.  
 
-  . **Task (15 points)**
+  . **Task (15 points)** (Done)
 +
   * Let the user select one or more buckets and censor all words from the text which match to these selected buckets and write it to a new text file.  
   * All word separators shall be copied to the new file in the correct places.

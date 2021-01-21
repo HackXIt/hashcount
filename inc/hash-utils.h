@@ -16,7 +16,7 @@ typedef struct Bucket **table_t;
 // void bucket_selection(bucket_t **table);
 table_t init_hashtable();
 table_t init_hashtable_from_file(const char *filename);
-unsigned int insert_word(table_t table, const char *word);
+unsigned int insert_word(table_t table, const char *word, const char *delimiters);
 void print_table(table_t table);
 void select_bucket_to_print(table_t table);
 void clean_table(table_t table);

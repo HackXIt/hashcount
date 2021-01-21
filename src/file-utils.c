@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:51:22 AM
  * Last edited:
- *   1/21/2021, 10:31:03 PM
+ *   1/22/2021, 12:46:57 AM
  * Auto updated?
  *   Yes
  *
@@ -23,7 +23,6 @@
 #include "list-utils.h"
 
 /*--- MACROS ---*/
-#define MAX_DUMP 100
 
 /*
 I need a function which reads a line from the FILE-Stream,
@@ -76,7 +75,7 @@ unsigned int copy_file(const char *filename_in, const char *filename_out)
 
 unsigned int censor_bucket_in_file(const char *filename, const bucket_t *bucket)
 {
-    FILE *to_censor = open_file(filename, "r");
+    FILE *to_censor = open_file(filename, "r+");
     if (to_censor == NULL)
     {
         fprintf(stderr, "Error opening file to be censored: \"%s\"\n", filename);
@@ -89,20 +88,20 @@ unsigned int censor_bucket_in_file(const char *filename, const bucket_t *bucket)
     That would be a nice usage for function-pointers to learn... but oh hey 27 hours until deadline, I don't have time for this.
     So let's just keep that as a note for potential future iterations.
     */
-    char dump[MAX_DUMP];
+    char dump[BUFSIZ];
     char *censor_sub = NULL;
     unsigned int censor_count = 0;
     fpos_t prev_pos;
     fgetpos(to_censor, &prev_pos);
     /* WORD-CENSORING */
-    while (fgets(dump, MAX_DUMP, to_censor) != NULL)
+    while (fgets(dump, BUFSIZ, to_censor) != NULL)
     {
         while (instance != NULL)
         {
             size_t len = strlen(instance->word);
-            while ((censor_sub = strstr(dump, instance->word)) != NULL)
+            while ((censor_sub = strstr(dump, instance->word_with_delimiters)) != NULL)
             {
-                memset(censor_sub, '*', len);
+                memset(censor_sub + 1, '*', len);
                 censor_count++;
             }
             instance = instance->node.next;
@@ -113,6 +112,7 @@ unsigned int censor_bucket_in_file(const char *filename, const bucket_t *bucket)
             fflush(to_censor);
         }
         fgetpos(to_censor, &prev_pos);
+        instance = bucket->start;
     }
     close_file(to_censor);
     printf("A total of %u words were censored in %s\n", censor_count, filename);

@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:56:35 AM
  * Last edited:
- *   1/21/2021, 11:44:41 PM
+ *   1/22/2021, 12:49:18 AM
  * Auto updated?
  *   Yes
  *
@@ -106,10 +106,10 @@ table_t init_hashtable_from_file(const char *filename)
         char *word = strtok(line, " .;:,?\t");
         while (word != NULL)
         {
-            char delims[2];
-            delims[0] = tmp[word - line + strlen(word)]; // NOTE need to understand how this works
-            delims[1] = tmp[word - line - 1];
-            insert_word(table, word);
+            char delimiters[2];
+            delimiters[0] = tmp[word - line + strlen(word)]; // NOTE need to understand how this works
+            delimiters[1] = tmp[word - line - 1];
+            insert_word(table, word, delimiters);
             word = strtok(NULL, " .;:,?\t");
         }
         free(tmp); // necessary
@@ -119,12 +119,12 @@ table_t init_hashtable_from_file(const char *filename)
     return table;
 }
 
-unsigned int insert_word(table_t table, const char *word)
+unsigned int insert_word(table_t table, const char *word, const char *delimiters)
 {
     unsigned int index = hash(word);
     if (table[index] == NULL) // first word with this hash
     {
-        table[index] = create_bucket(word);
+        table[index] = create_bucket(word, delimiters);
         if (table[index] == NULL)
         {
             fprintf(stderr, "Cannot insert word in hash-table because bucket-creation failed!\n");
@@ -138,7 +138,7 @@ unsigned int insert_word(table_t table, const char *word)
         if (instance == NULL)
         {
             /* Add new Item */
-            add_item_sorted(table[index], word);
+            add_item_sorted(table[index], word, delimiters);
             /* To work with unsorted list (faster but unsorted) */
             // append_item(table[index], word);
         }
@@ -228,6 +228,7 @@ void censor_bucket_selection(table_t table, const char *input_file, const char *
             {
                 if (bucket_num > 0 && bucket_num <= TABLE_SIZE)
                 {
+                    print_bucket(table[(bucket_num - 1)]);
                     selected_buckets[(bucket_num - 1)] = true;
                 }
             }
@@ -239,7 +240,9 @@ void censor_bucket_selection(table_t table, const char *input_file, const char *
     {
         if (selected_buckets[i] == true)
         {
+            printf("Censoring...\n");
             printf("Bucket[%u]: ", (i + 1));
+            print_bucket(table[i]);
             censor_bucket_in_file(output_file, table[i]);
             printf("\n");
         }

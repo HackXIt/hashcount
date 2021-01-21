@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:57:22 AM
  * Last edited:
- *   1/21/2021, 11:44:20 PM
+ *   1/22/2021, 12:13:54 AM
  * Auto updated?
  *   Yes
  *
@@ -41,7 +41,7 @@ void toLower(char *lower_word, const char *word)
 /*
 I need a function which creates a new item for the bucket.
 */
-item_t *create_item(const char *word)
+item_t *create_item(const char *word, const char *delimiters)
 {
     item_t *newItem = malloc(sizeof(item_t));
     if (newItem == NULL)
@@ -50,25 +50,44 @@ item_t *create_item(const char *word)
         return NULL;
     }
     newItem->word = malloc(sizeof(char) * strlen(word) + 1);
+    if (newItem->word == NULL)
+    {
+        fprintf(stderr, "Failed to allocate memory for Item-Word!\n");
+        free(newItem);
+        return NULL;
+    }
     newItem->lower_word = malloc(sizeof(char) * strlen(word) + 1);
+    if (newItem->lower_word == NULL)
+    {
+        fprintf(stderr, "Failed to allocate memory for Item-lowercase-Word!\n");
+        free(newItem->word);
+        free(newItem);
+        return NULL;
+    }
+    newItem->word_with_delimiters = malloc(sizeof(char) * strlen(word) + 3); // NULL-Byte + 2 delimiters
+    if (newItem->word_with_delimiters == NULL)
+    {
+        fprintf(stderr, "Failed to allocate memory for Item-Word-with-delimiters!\n");
+        free(newItem->word);
+        free(newItem->lower_word);
+        free(newItem);
+        return NULL;
+    }
     newItem->count = 1;
     newItem->node.next = NULL;
     newItem->node.prev = NULL;
-    if (newItem->word == NULL || newItem->lower_word == NULL)
-    {
-        fprintf(stderr, "Failed to allocate memory for Item-Word!\n");
-        free(newItem); // Clearing memory on potential failures: Bonus Points?
-        return NULL;
-    }
     strcpy(newItem->word, word);
     toLower(newItem->lower_word, word);
+    strncpy(newItem->word_with_delimiters, delimiters, 1); // Pre-Word delimiter
+    strcat(newItem->word_with_delimiters, word);
+    strncat(newItem->word_with_delimiters, (delimiters + 1), 1);
     return newItem;
 }
 
 /*
 I need a function which creates a bucket with an initializing word.
 */
-bucket_t *create_bucket(const char *word)
+bucket_t *create_bucket(const char *word, const char *delimiters)
 {
     bucket_t *newBucket = malloc(sizeof(bucket_t));
     if (newBucket == NULL)
@@ -76,7 +95,7 @@ bucket_t *create_bucket(const char *word)
         fprintf(stderr, "Failed to allocate memory for new Bucket!\n");
         return NULL;
     }
-    newBucket->start = create_item(word);
+    newBucket->start = create_item(word, delimiters);
     if (newBucket->start == NULL)
     {
         fprintf(stderr, "Cannot create bucket, because item-creation failed!\n");
@@ -93,9 +112,9 @@ This function assumes uniqueness of the new item.
 The user needs to check if the item already exists or not.
 The item is appended to the END of the list, breaking the sorted list.
 */
-void append_item(bucket_t *bucket, const char *word)
+void append_item(bucket_t *bucket, const char *word, const char *delimiters)
 {
-    item_t *newItem = create_item(word);
+    item_t *newItem = create_item(word, delimiters);
     bucket->end->node.next = newItem;
     newItem->node.prev = bucket->end;
     bucket->end = newItem;
@@ -105,10 +124,10 @@ void append_item(bucket_t *bucket, const char *word)
 I need a function which adds an item AND keeps the list sorted.
 When using only this function, the list stays sorted from the beginning.
 */
-void add_item_sorted(bucket_t *bucket, const char *word)
+void add_item_sorted(bucket_t *bucket, const char *word, const char *delimiters)
 {
 
-    item_t *newItem = create_item(word);
+    item_t *newItem = create_item(word, delimiters);
     item_t *ref = NULL;
     bucket->words++;
     if (strcmp(newItem->lower_word, bucket->start->lower_word) < 0) // Insert before starting element
