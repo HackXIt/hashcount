@@ -4,12 +4,12 @@
  * Created:
  *   1/5/2021, 11:56:35 AM
  * Last edited:
- *   1/20/2021, 10:19:59 PM
+ *   1/21/2021, 11:44:41 PM
  * Auto updated?
  *   Yes
  *
  * Description:
- *   This files contains the hash-functions and manages the hash-table
+ *   This file contains the hash-functions and manages the hash-table
 **/
 
 /*--- COMMON LIBRARIES ---*/
@@ -74,7 +74,7 @@ table_t init_hashtable()
     return table;
 }
 
-table_t init_hashtable_from_file(char const *filename)
+table_t init_hashtable_from_file(const char *filename)
 {
     table_t table = init_hashtable();
     FILE *f_input = open_file(filename, "r");
@@ -99,12 +99,20 @@ table_t init_hashtable_from_file(char const *filename)
         {
             *newLine = 0; // Set newline Character to Nullbyte => \0
         }
+        char *tmp = strdup(line); // Duplicates string - figuring out the required allocation length itself.
+        // NOTE Saving delimiters along with the word for more precise replacements
+        // Hint: https://stackoverflow.com/questions/12460264/c-determining-which-delimiter-used-strtok (storing delims)
+        // Hint: https://c-for-dummies.com/blog/?p=1690 (string duplication)
         char *word = strtok(line, " .;:,?\t");
         while (word != NULL)
         {
+            char delims[2];
+            delims[0] = tmp[word - line + strlen(word)]; // NOTE need to understand how this works
+            delims[1] = tmp[word - line - 1];
             insert_word(table, word);
             word = strtok(NULL, " .;:,?\t");
         }
+        free(tmp); // necessary
     }
     free(line);
     close_file(f_input);
@@ -168,7 +176,7 @@ void select_bucket_to_print(table_t table)
     printf("\n");
 }
 
-void bucket_selection(table_t table)
+void simple_bucket_selection(table_t table)
 {
     bool selected_buckets[TABLE_SIZE] = {0};
     char selection[BUFSIZ]; // FIXME valgrind "Conditional jump or move depends on uninitialised value(s)"
@@ -199,6 +207,40 @@ void bucket_selection(table_t table)
         {
             printf("Bucket[%u]: ", (i + 1));
             print_bucket(table[i]);
+            printf("\n");
+        }
+    }
+}
+
+void censor_bucket_selection(table_t table, const char *input_file, const char *output_file)
+{
+    bool selected_buckets[TABLE_SIZE] = {0};
+    char selection[BUFSIZ] = {0}; // FIXME valgrind "Conditional jump or move depends on uninitialised value(s)"
+    char *endptr;
+    int bucket_num = 0;
+    while (selection[0] != 'c')
+    {
+        printf("\nSelect bucket (1-" STRINGIFY(TABLE_SIZE) ") or exit (c): ");
+        if (fgets(selection, sizeof(selection), stdin) != NULL)
+        {
+            bucket_num = (int)strtol(selection, &endptr, 10);
+            if (selection[0] != '\n' && (*endptr == '\n' || *endptr == '\0'))
+            {
+                if (bucket_num > 0 && bucket_num <= TABLE_SIZE)
+                {
+                    selected_buckets[(bucket_num - 1)] = true;
+                }
+            }
+        }
+    }
+    copy_file(input_file, output_file); // Copy original contents of Input-File to Output-File
+    printf("--- Your selected buckets for censoring---\n");
+    for (int i = 0; i < TABLE_SIZE; i++)
+    {
+        if (selected_buckets[i] == true)
+        {
+            printf("Bucket[%u]: ", (i + 1));
+            censor_bucket_in_file(output_file, table[i]);
             printf("\n");
         }
     }

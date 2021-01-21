@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:57:22 AM
  * Last edited:
- *   1/20/2021, 10:02:19 PM
+ *   1/21/2021, 11:44:20 PM
  * Auto updated?
  *   Yes
  *
@@ -83,6 +83,7 @@ bucket_t *create_bucket(const char *word)
         free(newBucket);
         return NULL;
     }
+    newBucket->words = 1;
     newBucket->end = newBucket->start;
     return newBucket;
 }
@@ -109,12 +110,8 @@ void add_item_sorted(bucket_t *bucket, const char *word)
 
     item_t *newItem = create_item(word);
     item_t *ref = NULL;
-
-    if (bucket->start == NULL) // First element
-    {
-        bucket->start = newItem;
-    }
-    else if (strcmp(newItem->lower_word, bucket->start->lower_word) < 0) // Insert before starting element
+    bucket->words++;
+    if (strcmp(newItem->lower_word, bucket->start->lower_word) < 0) // Insert before starting element
     {
         newItem->node.next = bucket->start;
         newItem->node.next->node.prev = newItem;
