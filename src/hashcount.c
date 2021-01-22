@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:58:26 AM
  * Last edited:
- *   1/22/2021, 11:38:53 PM
+ *   1/22/2021, 11:53:33 PM
  * Auto updated?
  *   Yes
  *
@@ -123,7 +123,7 @@ int main(int argc, char *const argv[])
     }
     if ((censor || keep) && filename_out == NULL)
     {
-        fprintf(stderr, "To censor/remove words from an input file, an output file \"-o [FILE.txt]\" is required.");
+        fprintf(stderr, "To censor/remove words from an input file, an output file \"-o [FILE.txt]\" is required.\n");
         clear_filenames(filename_in, filename_out, filename_new, filename_bin);
         return EXIT_FAILURE;
     }
@@ -162,7 +162,7 @@ int main(int argc, char *const argv[])
     {
         print_selection(hashtable, bucket); // TODO
     }
-    else
+    if (!censor && !keep && !selection)
     {
         print_table(hashtable);
     }

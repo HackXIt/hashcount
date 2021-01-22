@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:56:35 AM
  * Last edited:
- *   1/22/2021, 11:35:13 PM
+ *   1/22/2021, 11:54:36 PM
  * Auto updated?
  *   Yes
  *
@@ -261,9 +261,10 @@ void censor_file_with_bucket(table_t table, unsigned int bucket_num, const char 
     if (bucket_num < TABLE_SIZE)
     {
         copy_file(input_file, output_file);
-        printf("Censoring all words, contained in...");
+        printf("Censoring all words, contained in...\n");
         printf("Bucket[%u]: ", bucket_num);
         print_bucket(table[bucket_num]);
+        printf("\n");
         if (censor_bucket_in_file(output_file, table[bucket_num]))
         {
             printf("Success!\n");
@@ -297,6 +298,7 @@ void print_selection(table_t table, unsigned int bucket_num)
         printf("Printing selection...\n");
         printf("Bucket[%d]: ", bucket_num);
         print_bucket(table[bucket_num]);
+        printf("\n");
     }
     else
     {
