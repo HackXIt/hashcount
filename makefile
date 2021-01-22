@@ -17,7 +17,7 @@
 
 CC=gcc
 INC=-iquote/home/rini-debian/git-stash/HWSE/project_hashcount/inc
-CFLAGS=-std=c99 -Wall -Wextra -pedantic -g
+CFLAGS=-std=c99 -Wall -Wextra -pedantic -g -Wno-unused-parameter
 BUILD=./build/
 # VPATH:=src:build
 vpath %.o ./build
