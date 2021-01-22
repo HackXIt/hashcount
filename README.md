@@ -26,6 +26,7 @@ Please keep in mind that all other arguments are ignored when using this mode. -
 Before you start, read the help-message by executing the program with `hashcount -h`.
 This will output the following message:
 ```
+> ./build/hashcount -h
 ./build/hashcount [OPTIONS]... [FILE.txt]...
 Creates a hash-table, based on the words from the supplied file.
 The words are seperated by: " .;:,?\t"
@@ -33,7 +34,8 @@ The words are seperated by: " .;:,?\t"
 ---- ARGUMENTS: --------------------
 [FILE.txt]               text file to be parsed by the program for the hash-table.
 ---- OPTIONS:   --------------------
-         -h              prints this help text.  -b [FILE.bin]   binary file that will be parsed and appended into if the user wants this. (not implemented yet)
+         -h              prints this help text.
+         -b [FILE.bin]   binary file that will be parsed and appended into if the user wants this. (not implemented yet)
          -n [FILE.bin]   New binary file to be created and filled with the hashtable. (not implemented yet)
          -o [FILE.txt]   name of the output file, to which the censor/remove changes will be written.
          -c [number]     censor the words in Bucket[num] from the input-file and write result to the output-file.
