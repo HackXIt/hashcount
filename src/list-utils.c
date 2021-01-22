@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:57:22 AM
  * Last edited:
- *   1/22/2021, 12:13:54 AM
+ *   1/22/2021, 1:08:40 AM
  * Auto updated?
  *   Yes
  *
@@ -239,6 +239,7 @@ void clean_bucket(bucket_t *bucket)
         instance = bucket->start->node.next;
         free(bucket->start->word);
         free(bucket->start->lower_word);
+        free(bucket->start->word_with_delimiters);
         free(bucket->start);
         bucket->start = instance;
     }
