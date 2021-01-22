@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:58:26 AM
  * Last edited:
- *   1/23/2021, 12:21:26 AM
+ *   1/23/2021, 12:33:00 AM
  * Auto updated?
  *   Yes
  *
@@ -190,7 +190,7 @@ void print_help(const char *argzero)
     printf("---- ARGUMENTS:\t--------------------\n");
     printf("[FILE.txt]\t\t text file to be parsed by the program for the hash-table.\n");
     printf("---- OPTIONS:\t--------------------\n");
-    printf("\t -h \t\t prints this help text.");
+    printf("\t -h \t\t prints this help text.\n");
     printf("\t -b [FILE.bin]\t binary file that will be parsed and appended into if the user wants this. (not implemented yet)\n");
     printf("\t -n [FILE.bin]\t New binary file to be created and filled with the hashtable. (not implemented yet)\n");
     printf("\t -o [FILE.txt]\t name of the output file, to which the censor/remove changes will be written.\n");
