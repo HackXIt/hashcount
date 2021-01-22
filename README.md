@@ -166,6 +166,7 @@ acts of retaliation and yet simultaneously you realize his murderous rampage
 must end in death. Vincent Price simply *** a genius actor and in my
 humble opinion the embodiment of the horror genre.
 ```
+</details>
 
 
 # Completed Tasks
