@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:51:22 AM
  * Last edited:
- *   1/22/2021, 12:46:57 AM
+ *   1/22/2021, 1:17:12 AM
  * Auto updated?
  *   Yes
  *
@@ -115,6 +115,6 @@ unsigned int censor_bucket_in_file(const char *filename, const bucket_t *bucket)
         instance = bucket->start;
     }
     close_file(to_censor);
-    printf("A total of %u words were censored in %s\n", censor_count, filename);
+    printf("%u occurences of %zu Bucket-words were censored in %s\n", censor_count, bucket->wordcount, filename);
     return true;
 }

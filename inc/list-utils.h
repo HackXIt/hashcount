@@ -23,7 +23,7 @@ typedef struct BucketItem
 typedef struct Bucket
 {
     item_t *start;
-    size_t words;
+    size_t wordcount;
     item_t *end;
 } bucket_t;
 
