@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:56:35 AM
  * Last edited:
- *   1/22/2021, 4:39:58 PM
+ *   1/22/2021, 11:35:13 PM
  * Auto updated?
  *   Yes
  *
@@ -30,6 +30,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
+#include <errno.h>
 
 /*--- CUSTOM LIBRARIES ---*/
 #include "list-utils.h"
@@ -88,7 +89,12 @@ table_t init_hashtable()
 table_t init_hashtable_from_file(const char *filename)
 {
     table_t table = init_hashtable();
-    FILE *f_input = open_file(filename, "r");
+    FILE *f_input = fopen(filename, "r");
+    if (f_input == NULL)
+    {
+        fprintf(stderr, "Error opening input-file %s for hashtable: %s", filename, strerror(errno));
+        return NULL;
+    }
     size_t len = 1; // Initial line-length, line is reallocated when it is longer
     // size_t is for storing bytes = unsigned long
     char *line = (char *)malloc(len * sizeof(char));
@@ -159,16 +165,6 @@ unsigned int insert_word(table_t table, const char *word, const char *delimiters
         }
     }
     return true;
-}
-
-void print_table(table_t table)
-{
-    for (int i = 0; i < TABLE_SIZE; i++)
-    {
-        printf("Bucket[%d]: ", i);
-        print_bucket(table[i]);
-        printf("\n");
-    }
 }
 
 void select_bucket_to_print(table_t table)
@@ -259,6 +255,78 @@ void censor_bucket_selection(table_t table, const char *input_file, const char *
         }
     }
 }
+
+void censor_file_with_bucket(table_t table, unsigned int bucket_num, const char *input_file, const char *output_file)
+{
+    if (bucket_num < TABLE_SIZE)
+    {
+        copy_file(input_file, output_file);
+        printf("Censoring all words, contained in...");
+        printf("Bucket[%u]: ", bucket_num);
+        print_bucket(table[bucket_num]);
+        if (censor_bucket_in_file(output_file, table[bucket_num]))
+        {
+            printf("Success!\n");
+        }
+        else
+        {
+            printf("Failed!\n");
+        }
+    }
+    else
+    {
+        fprintf(stderr, "The bucket number is out of range!\n");
+        return;
+    }
+}
+
+void print_table(table_t table)
+{
+    for (int i = 0; i < TABLE_SIZE; i++)
+    {
+        printf("Bucket[%d]: ", i);
+        print_bucket(table[i]);
+        printf("\n");
+    }
+}
+
+void print_selection(table_t table, unsigned int bucket_num)
+{
+    if (bucket_num < TABLE_SIZE)
+    {
+        printf("Printing selection...\n");
+        printf("Bucket[%d]: ", bucket_num);
+        print_bucket(table[bucket_num]);
+    }
+    else
+    {
+        fprintf(stderr, "The bucket number is out of range!\n");
+        return;
+    }
+}
+
+// void clear_file_with_bucket(table_t table, unsigned int bucket_num, const char *input_file, const char *output_file)
+// {
+//     if (bucket_num < TABLE_SIZE)
+//     {
+//         printf("Removing all words, which don't match...\n");
+//         printf("Bucket[%u]: ", bucket_num);
+//         print_bucket(table[bucket_num]);
+//         if (clear_file_with_bucket(input_file, output_file, table[bucket_num]))
+//         {
+//             printf("Success!\n");
+//         }
+//         else
+//         {
+//             printf("Failed!\n");
+//         }
+//     }
+//     else
+//     {
+//         fprintf(stderr, "The bucket number is out of range!\n");
+//         return;
+//     }
+// }
 
 void clean_table(table_t table)
 {

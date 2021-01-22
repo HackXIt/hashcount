@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:51:22 AM
  * Last edited:
- *   1/22/2021, 4:33:45 PM
+ *   1/22/2021, 11:28:05 PM
  * Auto updated?
  *   Yes
  *
@@ -29,27 +29,17 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <string.h>
+#include <errno.h>
 
 /*--- CUSTOM LIBRARIES ---*/
 #include "list-utils.h"
 
 /*--- MACROS ---*/
 
-/*
+/* TODO Function-Pointer improvement
 I need a function which reads a line from the FILE-Stream,
-and inserts it into the hashtable.
+and inserts it into the hashtable, by using the supplied function-pointer.
 */
-
-FILE *open_file(const char *filename, const char *mode)
-{
-    FILE *f_input = fopen(filename, mode);
-    if (f_input == NULL)
-    {
-        fprintf(stderr, "Couldn't open file %s!\n", filename);
-        return NULL;
-    }
-    return f_input;
-}
 
 void close_file(FILE *file)
 {
@@ -61,16 +51,16 @@ void close_file(FILE *file)
 
 unsigned int copy_file(const char *filename_in, const char *filename_out)
 {
-    FILE *file_in = open_file(filename_in, "r");
-    FILE *file_out = open_file(filename_out, "w");
+    FILE *file_in = fopen(filename_in, "r");
+    FILE *file_out = fopen(filename_out, "w");
     if (file_in == NULL)
     {
-        fprintf(stderr, "Error opening input-file: \"%s\"\n", filename_in);
+        fprintf(stderr, "Error opening input-file \"%s\" for copying: %s\n", filename_in, strerror(errno));
         return false;
     }
     if (file_out == NULL)
     {
-        fprintf(stderr, "Error opening output-file: \"%s\"\n", filename_out);
+        fprintf(stderr, "Error opening output-file \"%s\" for copying: %s\n", filename_out, strerror(errno));
         close_file(file_in);
         return false;
     }
@@ -84,21 +74,21 @@ unsigned int copy_file(const char *filename_in, const char *filename_out)
     return true;
 }
 
-unsigned int censor_bucket_in_file(const char *filename, const bucket_t *bucket)
-{
-    FILE *to_censor = open_file(filename, "r+");
-    if (to_censor == NULL)
-    {
-        fprintf(stderr, "Error opening file to be censored: \"%s\"\n", filename);
-        return false;
-    }
-    item_t *instance = bucket->start;
-    /* NOTE Function-Pointer improvement
+/* NOTE Function-Pointer improvement
     Once I used copy-paste to re-use the below censor-algorithm from submission 11, I thought to myself:
     A function which reads the input-file and executes another function would be great for this.
     That would be a nice usage for function-pointers to learn... but oh hey 27 hours until deadline, I don't have time for this.
     So let's just keep that as a note for potential future iterations.
     */
+unsigned int censor_bucket_in_file(const char *filename, const bucket_t *bucket)
+{
+    FILE *to_censor = fopen(filename, "r+");
+    if (to_censor == NULL)
+    {
+        fprintf(stderr, "Error opening file \"%s\" to be censored: %s\n", filename, strerror(errno));
+        return false;
+    }
+    item_t *instance = bucket->start;
     char dump[BUFSIZ];
     char *censor_sub = NULL;
     unsigned int censor_count = 0;
@@ -129,3 +119,34 @@ unsigned int censor_bucket_in_file(const char *filename, const bucket_t *bucket)
     printf("%u occurences of %zu Bucket-words were censored in %s\n", censor_count, bucket->wordcount, filename);
     return true;
 }
+
+// unsigned int clear_file_with_bucket(const char *input_file, const char *output_file, const bucket_t *bucket)
+// {
+//     FILE *f_in = fopen(input_file, "r");
+//     if (f_in == NULL)
+//     {
+//         fprintf(stderr, "Error opening input-file \"%s\" for reading: %s\n", filename, strerror(errno));
+//     }
+//     FILE *f_out = fopen(filename, "w");
+//     if (f_out == NULL)
+//     {
+//         fprintf(stderr, "Error opening output-file \"%s\" for writing: %s\n", filename, strerror(errno));
+//         return false;
+//     }
+//     item_t *instance = bucket->start;
+//     char dump[BUFSIZ];
+//     unsigned int clear_count = 0;
+//     char *word;
+//     /* WORD-CENSORING */
+//     while (fgets(dump, BUFSIZ, f_in) != NULL)
+//     {
+//         while (instance != NULL)
+//         {
+
+//         }
+//         instance = bucket->start;
+//     }
+//     close_file(to_clear);
+//     printf("%u occurences of %zu Bucket-words were censored in %s\n", censor_count, bucket->wordcount, filename);
+//     return true;
+// }

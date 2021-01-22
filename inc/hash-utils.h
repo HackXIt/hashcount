@@ -107,5 +107,31 @@ void simple_bucket_selection(table_t table);
  * @param output_file the name of the output-file.
  ***********************************************/
 void censor_bucket_selection(table_t table, const char *input_file, const char *output_file);
+/************************************************
+ * @brief Censors the words from a single bucket in output file.
+ * 
+ * This function copies the contents of the input-file to the output-file character-by-character.
+ * Then it censors the words from the bucket_number in the output-file.
+ * 
+ * If the bucket_number is out of range for the given table, an error message is printed and nothing will be done.
+ * 
+ * @param table the hashtable containing the buckets.
+ * @param bucket_num the bucket_number to be used for censoring.
+ * @param input_file the name of the input_file.
+ * @param output_file the name of the output_file.
+ ***********************************************/
+void censor_file_with_bucket(table_t table, unsigned int bucket_num, const char *input_file, const char *output_file);
+// void clear_file_with_bucket(table_t table, unsigned int bucket_num, const char *input_file, const char *output_file);
+/************************************************
+ * @brief Prints only the given bucket_number from the hash-table.
+ * 
+ * This function only prints the give bucket_number from the hash-table.
+ * 
+ * If the bucket_number is out of range for the given table, an error message is printed and nothing will be done.
+ * 
+ * @param table the hashtable containing the buckets.
+ * @param bucket_num  the bucket_number to be printed.
+ ***********************************************/
+void print_selection(table_t table, unsigned int bucket_num);
 
 #endif

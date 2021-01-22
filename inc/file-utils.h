@@ -11,18 +11,6 @@
 
 #ifndef FILE_UTILS_H
 #define FILE_UTILS_H
-
-/************************************************
- * @brief Opens the given filename with fopen() in the provided mode.
- * 
- * This function is totally redundant, but makes my code more readable,
- * because I don't need to write the error-handling multiple times.
- * 
- * @param filename the filename to be opened.
- * @param mode the mode in which the filename will be opened
- * @return FILE* returns a FILE-stream pointer or NULL if fopen() failed.
- ***********************************************/
-FILE *open_file(const char *filename, const char *mode);
 /************************************************
  * @brief Closes the given filename with fclose().
  * 

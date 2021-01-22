@@ -1,15 +1,40 @@
 # Compilation
 
 This project contains a makefile which automatically compiles the necessary files.
-Follow these steps to compile the project:
+Copy the steps below into your terminal to compile the project:
 
 ```bash
 cd project_hashcount
-mkdir build
+mkdir build # if it doesn't exist already
 make hashcount
+chmod +x ./build/hashcount
 ```
 
 # Execution
+
+This project has multiple execution modes.
+
+### Interactive-Mode
+
+Start the program with `hashcount -i` and work through the user-interactions to the desired output.
+Please keep in mind that all other arguments are ignored when using this mode.
+
+### Generic CLI-Mode
+
+Before you start, read the help-message by executing the program with `hashcount -h`.
+This will output the following message:
+```
+./hashcount [OPTIONS]... [FILE]...
+Creates a hash-table, based on the words from the supplied file.
+The words are seperated by: " .;:,?\t"
+
+---- ARGUMENTS: --------------------
+[FILE]           text file to be parsed by the program for the hash-table.
+---- OPTIONS:   --------------------
+         -h              prints this help text.  -b [FILENAME]   binary file that will be parsed to generate the table.
+         -o [FILENAME]   name of the binary file, in which the hash-table will be stored.
+         -i              runs the program in interactive-mode, requiring user-input for the program to run.
+```
 
 # Completed Tasks
 

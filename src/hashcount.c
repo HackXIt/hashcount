@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:58:26 AM
  * Last edited:
- *   1/22/2021, 4:36:37 PM
+ *   1/22/2021, 11:38:53 PM
  * Auto updated?
  *   Yes
  *
@@ -41,14 +41,27 @@
 /*--- MACROS ---*/
 
 void print_help();
+// char *get_filename(char *message);
+// const char *get_filename_ext(const char *filename);
+// bool interactive_mode(table_t table);
+char *allocate_filename(char *filename, char *error_message);
+void clear_filenames(char *a, char *b, char *c, char *d);
 
 int main(int argc, char *const argv[])
 {
-    bool interactive = false;
+    // bool interactive = false;
+    bool censor = false;
+    bool keep = false;
+    bool selection = false;
     char *filename_in = NULL;
     char *filename_out = NULL;
+    char *filename_bin = NULL;
+    char *filename_new = NULL;
+    unsigned int bucket = 0;
     char opt;
-    while ((opt = getopt(argc, argv, "hf:o:")) != -1)
+    table_t hashtable;
+    /* ---- ARGUMENT-Handling ---- */
+    while ((opt = getopt(argc, argv, "hib:n:o:c:k:p:")) != -1)
     {
         switch (opt)
         {
@@ -56,26 +69,28 @@ int main(int argc, char *const argv[])
             print_help(argv[0]);
             return EXIT_SUCCESS;
             break;
-        case 'b':
-            filename_in = calloc(strlen(optarg) + 1, sizeof(char));
-            if (filename_in == NULL)
-            {
-                fprintf(stderr, "Failed to allocate memory for filename_in!\n");
-                return EXIT_FAILURE;
-            }
-            strcpy(filename_in, optarg);
-            break;
+        // case 'i':
+        //     interactive = true;
+        //     break;
+        // case 'b':
+        //     filename_bin = allocate_filename(optarg, "Failed to allocate memory for filename_bin!\n");
+        //     break;
+        // case 'n':
+        //     filename_new = allocate_filename(optarg, "Failed to allocate memory for filename_new!\n");
+        //     break;
         case 'o':
-            filename_out = calloc(strlen(optarg) + 1, sizeof(char));
-            if (filename_out == NULL)
-            {
-                fprintf(stderr, "Failed to allocate memory for filename_in!\n");
-                return EXIT_FAILURE;
-            }
-            strcpy(filename_out, optarg);
+            filename_out = allocate_filename(optarg, "Failed to allocate memory for filename_out!\n");
             break;
-        case 'i':
-            interactive = true;
+        case 'c':
+            censor = true;
+            bucket = strtoul(optarg, NULL, 10);
+            break;
+        // case 'k':
+        //     keep = true;
+        //     bucket = strtoul(optarg, NULL, 10);
+        case 'p':
+            selection = true;
+            bucket = strtoul(optarg, NULL, 10);
             break;
         case '?':
             fprintf(stderr, "Invalid option '%c', use -h if you need help using this program.\n", optopt);
@@ -86,14 +101,30 @@ int main(int argc, char *const argv[])
             break;
         }
     }
+    /* ---- Interactive-Mode ---- */
+    // if (interactive)
+    // {
+    //     clear_filenames(filename_in, filename_out, filename_new, filename_bin);
+    //     filename_in = get_filename("Bitte geben Sie den Namen der Input-Datei ein:");
+    //     hashtable = init_hashtable_from_file(filename_in);
+    //     interactive_mode(hashtable);
+    //     clean_table(hashtable);
+    //     return EXIT_SUCCESS;
+    // }
+    /* ---- ERROR-Handling ---- */
     if (filename_in == NULL && argv[optind] != NULL)
     {
-        filename_in = calloc(strlen(argv[optind]) + 1, sizeof(char));
-        strcpy(filename_in, argv[optind]);
+        filename_in = allocate_filename(argv[optind], "Failed to allocate memory for filename_in!\n");
     }
     else if (filename_in == NULL && argv[optind] == NULL)
     {
-        fprintf(stderr, "This program requires an input file!\nIt can be a text file or a pre-created binary by using option '-b'.");
+        fprintf(stderr, "This program requires an input file!\nStart program with option -h for execution parameters.\n");
+        return EXIT_FAILURE;
+    }
+    if ((censor || keep) && filename_out == NULL)
+    {
+        fprintf(stderr, "To censor/remove words from an input file, an output file \"-o [FILE.txt]\" is required.");
+        clear_filenames(filename_in, filename_out, filename_new, filename_bin);
         return EXIT_FAILURE;
     }
     if (filename_out != NULL)
@@ -101,47 +132,153 @@ int main(int argc, char *const argv[])
         if (strcmp(filename_in, filename_out) == 0)
         {
             fprintf(stderr, "This program is not capable of overwriting it's own input file.\n");
+            clear_filenames(filename_in, filename_out, filename_new, filename_bin);
             return EXIT_FAILURE;
         }
     }
-    // NOTE at the moment output-file is not required NOR implemented.
-    table_t hashtable = init_hashtable_from_file(filename_in);
-    if (interactive)
+    if (censor && keep)
     {
-        select_bucket_to_print(hashtable);
-        simple_bucket_selection(hashtable);
+        fprintf(stderr, "It is not possible to censor and remove at the same time.\n");
+        clear_filenames(filename_in, filename_out, filename_new, filename_bin);
+        return EXIT_FAILURE;
+    }
+    // if (filename_bin != NULL)
+    // {
+    //     hashtable = init_hashtable_from_binary(filename_bin); // TODO
+    // }
+    // else
+    // {
+    hashtable = init_hashtable_from_file(filename_in);
+    // }
+    if (censor)
+    {
+        censor_file_with_bucket(hashtable, bucket, filename_in, filename_out);
+    }
+    // if (keep)
+    // {
+    //     clear_file_with_bucket(hashtable, bucket, filename_in, filename_out); // TODO
+    // }
+    if (selection)
+    {
+        print_selection(hashtable, bucket); // TODO
     }
     else
     {
         print_table(hashtable);
-        if (filename_out != NULL)
-        {
-            censor_bucket_selection(hashtable, filename_in, filename_out);
-        }
     }
     clean_table(hashtable);
-    if (filename_in != NULL)
-    {
-        free(filename_in);
-    }
-    if (filename_out != NULL)
-    {
-        free(filename_out);
-    }
+    clear_filenames(filename_in, filename_out, filename_new, filename_bin);
     return EXIT_SUCCESS;
 }
 
 void print_help(const char *argzero)
 {
-    printf("%s [OPTIONS]... [FILE]...\n", argzero);
+    /*
+    Possible Options:
+    h - help
+    b - binary
+    n - new
+    o - output
+    c - censor
+    k - keep
+    p - print
+    i - interactive
+    */
+    printf("%s [OPTIONS]... [FILE.txt]...\n", argzero);
     printf("Creates a hash-table, based on the words from the supplied file.\n");
     printf("The words are seperated by: \" .;:,?\\t\"\n\n");
     printf("---- ARGUMENTS:\t--------------------\n");
-    printf("[FILE]\t\t text file to be parsed by the program for the hash-table.\n");
+    printf("[FILE.txt]\t\t text file to be parsed by the program for the hash-table.\n");
     printf("---- OPTIONS:\t--------------------\n");
     printf("\t -h \t\t prints this help text.");
-    printf("\t -b [FILENAME]\t binary file that will be parsed to generate the table.\n");
-    printf("\t -o [FILENAME]\t name of the binary file, in which the hash-table will be stored.\n");
-    printf("\t -i \t\t runs the program in interactive-mode, requiring user-input for the program to run.\n");
+    printf("\t -b [FILE.bin]\t binary file that will be parsed and appended into if the user wants this. (not implemented yet)\n");
+    printf("\t -n [FILE.bin]\t New binary file to be created and filled with the hashtable. (not implemented yet)\n");
+    printf("\t -o [FILE.txt]\t name of the output file, to which the censor/remove changes will be written.\n");
+    printf("\t -c [number]\t censor the words in Bucket[num] from the input-file and write result to the output-file.\n\t\t\t(Requires option '-o')\n");
+    printf("\t -k [number]\t keep the words in Bucket[num] from the input-file and remove all other words. Write result to the output-file. (not implemented yet)\n\t\t\t(Requires option '-o')\n");
+    printf("\t -p [number]\t only print the given bucket-number instead of the whole table.\n");
+    printf("\t -i \t\t runs the program in interactive-mode, requiring user-input for the program to run. (not implemented yet)\n(This will ignore all other options & parameters)\n");
     printf("\n");
+}
+
+/************************************************
+ * @brief Dynamically allocate memory for a file-name.
+ * 
+ * This function allocates memory for the given filename.
+ * If the allocation fails, the provided error message is printed.
+ * 
+ * @param filename the string which contains the filename to be allocated.
+ * @param error_message the error message to be printed to stderr if allocation fails.
+ * @return char* returns pointer to the allocated filename.
+ ***********************************************/
+char *allocate_filename(char *filename, char *error_message)
+{
+    char *newFilename = calloc(strlen(filename) + 1, sizeof(char));
+    if (newFilename == NULL)
+    {
+        fprintf(stderr, error_message);
+        return NULL;
+    }
+    strcpy(newFilename, filename);
+    return newFilename;
+}
+
+/************************************************
+ * @brief Read the filename from stdin.
+ * 
+ * @param message the message to be printed before asking for user-input.
+ * @return char* returns the filename that was read from stdin.
+ ***********************************************/
+// char *get_filename(char *message)
+// {
+//     char *filename;
+//     printf("%s", message);
+//     scanf("%s", filename);
+
+//     return filename;
+// }
+
+// const char *get_filename_ext(const char *filename)
+// {
+//     const char *dot = strrchr(filename, '.');
+//     if (!dot || dot == filename)
+//     {
+//         return "";
+//     }
+//     return dot + 1;
+// }
+
+// bool interactive_mode(table_t table)
+// {
+// }
+
+/************************************************
+ * @brief Clears dynamically allocated memory of the filenames from main. 
+ * 
+ * The function checks each parameter against NULL and free's the memory if it's not NULL.
+ * If no filename was allocated, then this function does nothing.
+ * 
+ * @param a filename_a
+ * @param b filename_b
+ * @param c filename_c
+ * @param d filename_d
+ ***********************************************/
+void clear_filenames(char *a, char *b, char *c, char *d)
+{
+    if (a != NULL)
+    {
+        free(a);
+    }
+    if (b != NULL)
+    {
+        free(b);
+    }
+    if (c != NULL)
+    {
+        free(c);
+    }
+    if (d != NULL)
+    {
+        free(d);
+    }
 }
