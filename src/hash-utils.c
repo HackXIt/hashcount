@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:56:35 AM
  * Last edited:
- *   1/22/2021, 12:49:18 AM
+ *   1/22/2021, 1:22:55 AM
  * Auto updated?
  *   Yes
  *
@@ -179,7 +179,7 @@ void select_bucket_to_print(table_t table)
 void simple_bucket_selection(table_t table)
 {
     bool selected_buckets[TABLE_SIZE] = {0};
-    char selection[BUFSIZ]; // FIXME valgrind "Conditional jump or move depends on uninitialised value(s)"
+    char selection[BUFSIZ] = {0}; // FIXME valgrind "Conditional jump or move depends on uninitialised value(s)"
     char *endptr;
     int bucket_num = 0;
     while (selection[0] != 'c')
