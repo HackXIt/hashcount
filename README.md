@@ -44,7 +44,7 @@ The words are seperated by: " .;:,?\t"
                         (Requires option '-o')
          -p [number]     only print the given bucket-number instead of the whole table.
          -i              runs the program in interactive-mode, requiring user-input for the program to run. (not implemented yet)
-(This will ignore all other options & parameters)
+                        (This will ignore all other options & parameters)
 ```
 
 **The program requires an input file to create the hashtable.**

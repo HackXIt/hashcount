@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:58:26 AM
  * Last edited:
- *   1/23/2021, 12:33:00 AM
+ *   1/23/2021, 12:35:18 AM
  * Auto updated?
  *   Yes
  *
@@ -197,7 +197,7 @@ void print_help(const char *argzero)
     printf("\t -c [number]\t censor the words in Bucket[num] from the input-file and write result to the output-file.\n\t\t\t(Requires option '-o')\n");
     printf("\t -k [number]\t keep the words in Bucket[num] from the input-file and remove all other words. Write result to the output-file. (not implemented yet)\n\t\t\t(Requires option '-o')\n");
     printf("\t -p [number]\t only print the given bucket-number instead of the whole table.\n");
-    printf("\t -i \t\t runs the program in interactive-mode, requiring user-input for the program to run. (not implemented yet)\n(This will ignore all other options & parameters)\n");
+    printf("\t -i \t\t runs the program in interactive-mode, requiring user-input for the program to run. (not implemented yet)\n\t\t\t(This will ignore all other options & parameters)\n");
     printf("\n");
 }
 
