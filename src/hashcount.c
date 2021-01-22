@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:58:26 AM
  * Last edited:
- *   1/23/2021, 12:35:18 AM
+ *   1/23/2021, 12:40:50 AM
  * Auto updated?
  *   Yes
  *
@@ -150,6 +150,11 @@ int main(int argc, char *const argv[])
     // {
     hashtable = init_hashtable_from_file(filename_in);
     // }
+    if (hashtable == NULL)
+    {
+        clear_filenames(filename_in, filename_out, filename_new, filename_bin);
+        return EXIT_FAILURE;
+    }
     if (censor)
     {
         censor_file_with_bucket(hashtable, bucket, filename_in, filename_out);

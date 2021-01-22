@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:56:35 AM
  * Last edited:
- *   1/22/2021, 11:54:36 PM
+ *   1/23/2021, 12:41:30 AM
  * Auto updated?
  *   Yes
  *
@@ -92,7 +92,7 @@ table_t init_hashtable_from_file(const char *filename)
     FILE *f_input = fopen(filename, "r");
     if (f_input == NULL)
     {
-        fprintf(stderr, "Error opening input-file %s for hashtable: %s", filename, strerror(errno));
+        fprintf(stderr, "Error opening input-file %s for hashtable: %s\n", filename, strerror(errno));
         return NULL;
     }
     size_t len = 1; // Initial line-length, line is reallocated when it is longer
