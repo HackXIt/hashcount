@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:58:26 AM
  * Last edited:
- *   1/22/2021, 11:53:33 PM
+ *   1/23/2021, 12:21:26 AM
  * Auto updated?
  *   Yes
  *
@@ -160,7 +160,7 @@ int main(int argc, char *const argv[])
     // }
     if (selection)
     {
-        print_selection(hashtable, bucket); // TODO
+        print_selection(hashtable, bucket);
     }
     if (!censor && !keep && !selection)
     {
