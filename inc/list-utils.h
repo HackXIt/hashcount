@@ -81,7 +81,7 @@ bucket_t *create_bucket(const char *word, const char *delimiters);
  * 
  * The function dynamically creates a new item from the provided word and delimiters.
  * The item is then appended to the bottom of the bucket (i.e. end of the list)
- * This function servers as an alternative to @see add_item_sorted()
+ * This function servers as an alternative to @link add_item_sorted() @endlink
  * It's much more simple and less error-prone but will inevitably make the list unsorted.
  * 
  * @param bucket the bucket, in which the item should be appended.

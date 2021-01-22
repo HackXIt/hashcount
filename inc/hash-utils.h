@@ -41,7 +41,7 @@ table_t init_hashtable();
 /************************************************
  * @brief Initializes and directly fills a hash-table with words from a text file.
  * 
- * This function initializes a hashtable with @see init_hashtable() and
+ * This function initializes a hashtable with @link init_hashtable() @endlink and
  * immidiatly fills it with the words that are parsed from the provided filename.
  * The file is read line by line using getline.
  * 
@@ -70,6 +70,8 @@ unsigned int insert_word(table_t table, const char *word, const char *delimiters
 /************************************************
  * @brief Outputs the complete hash-table to stdout.
  * 
+ * Each bucket in the table is printed using the @link list-utils.h list-utils @endlink function @link print_bucket() @endlink.  
+ * 
  * @param table the hashtable to be printed.
  ***********************************************/
 void print_table(table_t table);
@@ -88,8 +90,8 @@ void clean_table(table_t table);
 /************************************************
  * @brief Opens user-interaction to select specific word-buckets. A summary of the selection is printed at the end.
  * 
- * This function is an alternative to @see select_bucket_to_print()
- * It was adapted in @see censor_bucket_selection() to censor all selected word-buckets. 
+ * This function is an alternative to @link select_bucket_to_print() @endlink
+ * It was adapted in @link censor_bucket_selection() @endlink to censor all selected word-buckets. 
  * 
  * @param table the hashtable to be used for the interaction.
  ***********************************************/
@@ -97,7 +99,7 @@ void simple_bucket_selection(table_t table);
 /************************************************
  * @brief Opens user-interaction to select specific word-buckets for censoring.
  * 
- * This function is an adaption from @see simple_bucket_selection() to censor all selected word-buckets
+ * This function is an adaption from @link simple_bucket_selection() @endlink to censor all selected word-buckets
  * from the provided input file. The censored result is written to the output-file.
  * 
  * @param table the hashtable to be used for the interaction.
