@@ -4,13 +4,24 @@
  * Created:
  *   1/5/2021, 11:56:35 AM
  * Last edited:
- *   1/22/2021, 1:22:55 AM
+ *   1/22/2021, 4:39:58 PM
  * Auto updated?
  *   Yes
  *
  * Description:
  *   This file contains the hash-functions and manages the hash-table
 **/
+
+/************************************************
+ * @file hash-utils.c
+ * @author Nikolaus Rieder (hackxit@gmail.com)
+ * @brief Hash-utilities is the main library for hash-table creation and manipulation.
+ * @version 0.1
+ * @date 2021-01-22
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ ***********************************************/
 
 /*--- COMMON LIBRARIES ---*/
 #define _GNU_SOURCE // for some reason this is necessary to use strlen()

@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:57:22 AM
  * Last edited:
- *   1/22/2021, 1:16:39 AM
+ *   1/22/2021, 4:35:38 PM
  * Auto updated?
  *   Yes
  *
@@ -12,6 +12,17 @@
  *   This file contains the list definitions and list functions, which
  *   supports the hash-table in case of collisions.
 **/
+
+/************************************************
+ * @file list-utils.c
+ * @author Nikolaus Rieder (hackxit@gmail.com)
+ * @brief List utilities is an internal library for list-operations, which are required when hash-collisions occur.
+ * @version 0.1
+ * @date 2021-01-22
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ ***********************************************/
 
 // TODO delete unnecessary common libraries, if they are not used in this file
 

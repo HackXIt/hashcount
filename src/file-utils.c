@@ -4,13 +4,24 @@
  * Created:
  *   1/5/2021, 11:51:22 AM
  * Last edited:
- *   1/22/2021, 1:17:12 AM
+ *   1/22/2021, 4:33:45 PM
  * Auto updated?
  *   Yes
  *
  * Description:
  *   This file contains all file-utility functions
 **/
+
+/************************************************
+ * @file file-utils.c
+ * @author Nikolaus Rieder (hackxit@gmail.com)
+ * @brief File utilities is an internal library for file-related operations.
+ * @version 0.1
+ * @date 2021-01-22
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ ***********************************************/
 
 /*--- COMMON LIBRARIES ---*/
 #include <stdlib.h>

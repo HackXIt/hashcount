@@ -4,7 +4,7 @@
  * Created:
  *   1/5/2021, 11:58:26 AM
  * Last edited:
- *   1/21/2021, 10:38:31 PM
+ *   1/22/2021, 4:36:37 PM
  * Auto updated?
  *   Yes
  *
@@ -12,6 +12,17 @@
  *   This file contains the main and tests the project libraries
  *   It's also responsible for handling arguments.
 **/
+
+/************************************************
+ * @file hashcount.c
+ * @author Nikolaus Rieder (hackxit@gmail.com)
+ * @brief Hashcount is the main program, responsible for CLI-handling and general usage.
+ * @version 0.1
+ * @date 2021-01-22
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ ***********************************************/
 
 // TODO delete unnecessary common libraries, if they are not used in this file
 
